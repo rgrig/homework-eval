@@ -1,0 +1,2 @@
+./gwt-ant && sudo ./deploy.sh && sudo /etc/init.d/tomcat6 restart && sudo /etc/init.d/apache2 restart
+

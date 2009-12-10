@@ -1,0 +1,28 @@
+anew
+happy
+sad
+world
+Chancellor
+latterly
+reply
+pretence
+Jarndyce
+sorts
+good
+tickled the maces
+cat on the mat
+loose belief
+ludslip
+holiday
+i am the man
+boyer-moore is really interesting
+this is a really long sentence that should waste some processing time
+and what do you think about this one?
+or do longer sentences make the boyer-moore algorithm work better?
+friend
+enemy
+hallo hallo
+music to my ears
+Whittington
+waggoner
+studying the worst case performance

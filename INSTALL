@@ -1,0 +1,3 @@
+1. Install Tomcat6.
+2. Add the dist/WebEval as an web application (on my Ubuntu
+   this is in /var/lib/tomcat6/webapps).

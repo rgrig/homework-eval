@@ -1,0 +1,130 @@
+body, html {
+  color: black;
+  font-family: Helvetica, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  height: 100%;
+}
+
+#container {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+code {
+}
+
+pre {
+  font-family: monospace;
+}
+
+b {
+  font-weight: bold;
+}
+
+/* See http://www.somacon.com/p141.php for table formatting. */
+.gwt-FlexTable {
+  border-width: 1px;
+  border-spacing: 0px;
+  border-style: outset;
+  border-color: gray;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gwt-FlexTable-cell {
+  border-width: 1px;
+  padding: 1px;
+  border-style: inset;
+  border-color: gray;
+}
+
+.gwt-FlexTable-cell-header {
+  font-weight: bold;
+  border-width: 1px;
+  padding: 1px;
+  border-style: inset;
+  border-color: black;
+}
+
+.gwt-FlexTable-row-normal {
+  background-color: #EEFFEE;
+}
+
+.gwt-FlexTable-row-selected {
+  background-color: #00FF00;
+}
+
+.small  {
+  font-size: xx-small;
+  color: gray;
+  font-family: monospace;
+}
+
+.gwt-TabPanel {
+  width: 100%;
+}
+
+.gwt-TabPanelBottom {
+  border: 2px solid #80FF80;
+  padding: 5px;
+}
+
+.gwt-TabBar {
+  background-color: #80FF80;
+}
+
+.gwt-TabBar .gwt-TabBarFirst {
+  height: 100%;
+  border-bottom: 1px solid #80FF80;
+  padding-left: 3px;
+}
+
+.gwt-TabBar .gwt-TabBarRest {
+  border-bottom: 1px solid #80FF80;
+  padding-right: 3px;
+}
+
+.gwt-TabBar .gwt-TabBarItem {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  padding-right: 10px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-TabBar .gwt-TabBarItem-selected {
+  font-weight: bold;
+  background-color: #E8EEF7;
+  border: 1px solid #00FF00;
+  padding: 2px;
+  cursor: default;
+}
+
+.gwt-WaitPopup {
+  background-color: #002000;
+  color: #80FF80;
+  border: 3px solid black;
+  padding: 20px;
+}
+
+.gwt-DialogBox {
+  background-color: #EEFFEE;
+  color: black;
+  border: 2px solid black;
+  padding: 1px;
+}
+
+.gwt-DialogBox .Caption {
+  background-color: #006000;
+  color: white;
+  font-weight: bold;
+  padding: 3px;
+}
+
+.code {
+  font-family: monospace;
+  font-size: 10px;
+}
+
