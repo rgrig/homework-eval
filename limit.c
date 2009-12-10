@@ -82,11 +82,7 @@ int main(int argc, char* argv[]) {
   /* watch out for wall time limit */
   gettimeofday(&start_time, NULL);
   while (!waitpid(child, &status, WNOHANG)) {
-<<<<<<< .mine
     usleep(25000);
-=======
-    usleep(20000);
->>>>>>> .r233
     gettimeofday(&current_time, NULL);
     sec = current_time.tv_sec - start_time.tv_sec;
     usec = current_time.tv_usec - start_time.tv_usec;
