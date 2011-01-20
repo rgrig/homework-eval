@@ -2,7 +2,7 @@ package org.rgrig.client;
 
 import com.google.gwt.user.client.rpc.*;
 
-public interface WebEvalSrvAsync {
+public interface HomeworkEvalSrvAsync {
   public void getProblems(AsyncCallback callback);
   public void getQuizzes(AsyncCallback callback);
 

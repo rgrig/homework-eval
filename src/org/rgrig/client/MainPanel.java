@@ -6,8 +6,8 @@ import com.google.gwt.user.client.ui.*;
 import java.util.Arrays;
 
 public class MainPanel extends TabPanel {
-  public WebEvalApp app;
-  public WebEvalSrvAsync srv;
+  public HomeworkEvalApp app;
+  public HomeworkEvalSrvAsync srv;
 
   public Quiz[] quiz;
   public Problem[] problem;
@@ -29,7 +29,7 @@ public class MainPanel extends TabPanel {
     Quiz[] quiz, 
     Problem[] problem, 
     String[] languages,
-    WebEvalApp app
+    HomeworkEvalApp app
   ) {
     this.quiz = quiz;
     this.problem = problem;

@@ -5,14 +5,14 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 public class QuizSubmitter implements ClickListener {
-  public WebEvalSrvAsync srv;
+  public HomeworkEvalSrvAsync srv;
   public Quiz quiz;
   public Panel panel;
   public RadioButton[][] answers;
   public TextBox pseudonym;
 
   public QuizSubmitter(
-    WebEvalSrvAsync srv,
+    HomeworkEvalSrvAsync srv,
     Quiz quiz, 
     Panel panel,
     RadioButton[][] answers, 

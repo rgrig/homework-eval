@@ -5,14 +5,14 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 public class PbSubmitter implements ClickListener {
-  public WebEvalSrvAsync srv;
+  public HomeworkEvalSrvAsync srv;
   public Problem problem;
   public TextArea solution;
   public ListBox lang;
   public Label score;
 
   public PbSubmitter(
-    WebEvalSrvAsync srv,
+    HomeworkEvalSrvAsync srv,
     Problem problem,
     TextArea solution,
     ListBox lang,

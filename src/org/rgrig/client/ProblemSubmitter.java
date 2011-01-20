@@ -8,7 +8,7 @@ public class ProblemSubmitter implements ClickListener {
     String pbId,
     TextArea solution,
     ListBox language,
-    WebEvalApp application
+    HomeworkEvalApp application
   ) {
     this.pbId = pbId;
     this.solution = solution;
@@ -19,7 +19,7 @@ public class ProblemSubmitter implements ClickListener {
   private String pbId;
   private TextArea solution;
   private ListBox language;
-  private WebEvalApp application;
+  private HomeworkEvalApp application;
 
   public void onClick(Widget sender) {
     // TODO

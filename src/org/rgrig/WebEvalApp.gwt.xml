@@ -1,6 +1,0 @@
-<module>
-  <inherits name='com.google.gwt.user.User'/>
-  <entry-point class='org.rgrig.client.WebEvalApp'/>
-  <servlet path="/WebEvalSrv" class="org.rgrig.server.WebEvalSrvImpl" />
-  <stylesheet src='style.css'/>
-</module>

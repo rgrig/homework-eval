@@ -15,8 +15,8 @@ import javax.servlet.http.*;
  * This delegates to {@code Database} all interactions with a
  * database.
  */
-public class WebEvalSrvImpl 
-  extends RemoteServiceServlet implements WebEvalSrv {
+public class HomeworkEvalSrvImpl 
+  extends RemoteServiceServlet implements HomeworkEvalSrv {
 
   public static Logger log = Logger.getLogger("org.rgrig.server");
   public static String DATABASE = "/home/web-eval";
@@ -24,7 +24,7 @@ public class WebEvalSrvImpl
   public Database db;
   public Judge judge;
 
-  public WebEvalSrvImpl() {
+  public HomeworkEvalSrvImpl() {
     try {
       FileHandler logh = new FileHandler(
         DATABASE+"/log/main"+String.format("%x", System.currentTimeMillis()));
