@@ -1,0 +1,6 @@
+start 2010-01-01
+deadline 2020-01-01 16:30
+timelimit 1
+memlimit 256
+score 30
+name BarGraph

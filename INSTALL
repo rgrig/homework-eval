@@ -1,1 +1,24 @@
-TODO
+Briefly:
+1. Install the web application WAR file in a servlet server.
+2. Let the web application go crazy on your system.
+3. Copy homework-eval-db in /home and make files owned by the servlet server.
+4. Create user `jailrun', and let servlet's server sudo as jailrun.
+
+Step 1.
+  sudo apt-get install tomcat6*
+  ant war
+  sudo cp HomeworkEvalApp.war /var/lib/tomcat6/webapps
+At this point you should be able to see the login screen at
+  http://localhost:8080/HomeworkEvalApp/
+
+Step 2. Append the following to /etc/tomcat6/policy.d/50local.policy
+  grant codeBase "file:${catalina.base}/webapps/HomeworkEvalApp/-" {
+    permission java.security.AllPermision;
+  }
+
+Step 3.
+  sudo cp -r homework-eval-db /home
+  find /home/homework-eval-db | xargs sudo chown tomcat6
+
+If something doesn't work, try to restart tomcat.
+  sudo /etc/init.d/tomcat6 restart

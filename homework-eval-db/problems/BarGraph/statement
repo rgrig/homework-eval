@@ -1,0 +1,31 @@
+<p><b>Background and Problem:</b>
+Smart phones are very nice, everyone knows that. But they are also quite expensive, so at the end of the month you can have huuuuge bills. :( <br/>
+But there is a way to not feel that bad about how expensive they are: a nice graph!<br/>
+Yes. It has been proved that visualizing things in a nice graph makes the very bad things seem just bad. For this reason you will have to take care to plot the expenses of the users in a nice bar graph.
+</p>
+<p>A bar graph is a graph consisting of vertical stacks of blocks ('#') of different height.
+You will have to draw the graph given the values it has to represent. You will be given the desired height of the graph in number of blocks, <code>H</code>, and the values of the <code>N</code> bars of the graph <code>X1 ... XN</code>.
+ The bar with the maximum value should have height <code>H</code> and the other bars should be scaled proportionally to that a bar has n blocks iff the proportional value is more or equal than n.</p>
+
+<br/>
+
+<b>Input:</b>
+
+<code>H N X_1 ... X_N</code>
+<ol>
+<li> <code>H</code>: graph height in lines (integer) </li>
+<li> <code>N</code>: number of values in the graph (integer) </li>
+<li> <code>X1...XN</code>: N values of the graph (integers) </li>
+</ol>
+
+<b>Constraints:</b>
+<ol>
+<li> The number of test cases is between 1 and 200 </li>
+<li> <code>Xi</code> is an integer between 0 and 10000 </li>
+<li> At least one of the <code>Xi</code> will be different of 0</li>
+<li> <code>H</code> is an integer between 1 and 100 </li>
+<li> <code>N</code> is an integer between 1 and 100 </li>
+<li> Time limit: 1 second. Memory limit: 256 MB.</li>
+</ol>
+
+

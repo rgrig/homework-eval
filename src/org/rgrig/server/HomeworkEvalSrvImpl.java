@@ -18,8 +18,13 @@ import javax.servlet.http.*;
 public class HomeworkEvalSrvImpl
   extends RemoteServiceServlet implements HomeworkEvalSrv {
 
+  // config stuff {{{
+  public static String DATABASE = "/home/homework-eval-db";
+  public static String JUDGE_USER = "jailrun";
+  public static String JUDGE_HOME = "/home/" + JUDGE_USER;
+  // }}}
+
   public static Logger log = Logger.getLogger("org.rgrig.server");
-  public static String DATABASE = "/home/web-eval";
 
   public Database db;
   public Judge judge;
@@ -38,7 +43,7 @@ public class HomeworkEvalSrvImpl
       pw.flush();
 
       db = new FileDatabase(DATABASE);
-      judge = new Judge("jailrun", "/home/jailrun");
+      judge = new Judge(JUDGE_USER, JUDGE_HOME);
     } catch (IOException a) {
       db = null;
       judge = null;
@@ -111,6 +116,8 @@ public class HomeworkEvalSrvImpl
       throw UtilSrv.se("Can't verify your login (A)", e);
     } catch (java.io.UnsupportedEncodingException e) {
       throw UtilSrv.se("Can't verify your login (B)", e);
+    } catch (NullPointerException e) {
+      throw UtilSrv.se("Can't verify your login (C)", e);
     }
   }
 
