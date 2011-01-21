@@ -22,12 +22,7 @@ public class HomeworkEvalApp implements EntryPoint {
   public final PasswordTextBox password = new PasswordTextBox();
 
   public void onModuleLoad() {
-    // Prepare for RPC calls 
-    srv = (HomeworkEvalSrvAsync)GWT.create(HomeworkEvalSrv.class);
-    ServiceDefTarget endpoint = (ServiceDefTarget)srv;
-    String moduleRelativeUrl = GWT.getModuleBaseURL() + "HomeworkEvalSrv";
-    endpoint.setServiceEntryPoint(moduleRelativeUrl);
-
+    srv = GWT.create(HomeworkEvalSrv.class);
     setupLogin();
   }
 
@@ -60,6 +55,7 @@ public class HomeworkEvalApp implements EntryPoint {
     }));
     vp.add(failed);
     ma.clear(); ma.add(vp);
+    pseudonym.setFocus(true);
   }
 
   public void setupMainArea() {

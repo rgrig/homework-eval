@@ -10,11 +10,11 @@
   </description>
 
   <servlet>
-    <servlet-name>HomeworkEvalSrv</servlet-name>
+    <servlet-name>HomeworkEvalSrvImpl</servlet-name>
     <servlet-class>org.rgrig.server.HomeworkEvalSrvImpl</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>HomeworkEvalSrv</servlet-name>
+    <servlet-name>HomeworkEvalSrvImpl</servlet-name>
     <url-pattern>/homeworkevalapp/HomeworkEvalSrv</url-pattern>
   </servlet-mapping>
 

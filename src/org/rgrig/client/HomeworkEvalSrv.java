@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.*;
  * languages, can log in and out, can ask for a quiz/problem to 
  * be judged, and can ask for the current scores.
  */
+@RemoteServiceRelativePath("HomeworkEvalSrv")
 public interface HomeworkEvalSrv extends RemoteService {
   /* Ask for (active) problems and quizzes. */
   public Problem[] getProblems() throws ServerException;

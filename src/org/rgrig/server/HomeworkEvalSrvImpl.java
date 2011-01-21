@@ -15,7 +15,7 @@ import javax.servlet.http.*;
  * This delegates to {@code Database} all interactions with a
  * database.
  */
-public class HomeworkEvalSrvImpl 
+public class HomeworkEvalSrvImpl
   extends RemoteServiceServlet implements HomeworkEvalSrv {
 
   public static Logger log = Logger.getLogger("org.rgrig.server");
