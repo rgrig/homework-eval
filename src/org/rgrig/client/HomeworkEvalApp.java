@@ -1,9 +1,11 @@
 package org.rgrig.client;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
 
 public class HomeworkEvalApp implements EntryPoint {
   public MainPanel mainPanel;
@@ -45,8 +47,8 @@ public class HomeworkEvalApp implements EntryPoint {
     vp.add(hp2);
     final Label failed = new Label("Login failed!");
     failed.setVisible(false);
-    vp.add(new Button("Login", new ClickListener() {
-      public void onClick(Widget sender) {
+    vp.add(new Button("Login", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         srv.login(pseudonym.getText(), password.getText(), new Aac() {
           public void onSuccess(Object result) {
             studentId = (String)result;
@@ -91,8 +93,8 @@ public class HomeworkEvalApp implements EntryPoint {
     mainPanel = new MainPanel(quiz, problem, languages, this);
     vp.add(mainPanel);
     vp.add(new HTML("<hr />"));
-    vp.add(new Button("Logout", new ClickListener() {
-      public void onClick(Widget sender) {
+    vp.add(new Button("Logout", new ClickHandler() {
+      public void onClick(ClickEvent event) {
         srv.logout(new Aac() {
           public void onSuccess(Object result) { setupLogin(); }
         });

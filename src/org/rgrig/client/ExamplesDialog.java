@@ -1,5 +1,7 @@
 package org.rgrig.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -22,8 +24,8 @@ public class ExamplesDialog extends DialogBox {
     p.add(new HTML("<br/>"));
     p.add(tbl);
     p.add(new HTML("<br/>"));
-    p.add(new Button("OK", new ClickListener() {
-      public void onClick(Widget sender) { ExamplesDialog.this.hide(); }
+    p.add(new Button("OK", new ClickHandler() {
+      public void onClick(ClickEvent event) { ExamplesDialog.this.hide(); }
     }));
     setWidget(p);
   }

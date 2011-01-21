@@ -1,5 +1,7 @@
 package org.rgrig.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -147,8 +149,8 @@ public class MainPanel extends TabPanel {
     updateScores(table);
 
     scoresPanel.add(table);
-    scoresPanel.add(new Button("Update", new ClickListener() {
-      public void onClick(Widget sender) { updateScores(table); }
+    scoresPanel.add(new Button("Update", new ClickHandler() {
+      public void onClick(ClickEvent event) { updateScores(table); }
     }));
 
   }

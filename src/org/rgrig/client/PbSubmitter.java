@@ -1,10 +1,12 @@
 package org.rgrig.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
-public class PbSubmitter implements ClickListener {
+public class PbSubmitter implements ClickHandler {
   public HomeworkEvalSrvAsync srv;
   public Problem problem;
   public TextArea solution;
@@ -25,7 +27,7 @@ public class PbSubmitter implements ClickListener {
     this.score = score;
   }
 
-  public void onClick(Widget sender) {
+  public void onClick(ClickEvent event) {
     WaitPopup.Show();
     String l = lang.getItemText(lang.getSelectedIndex());
     if (solution.getText().length() > 20000) {

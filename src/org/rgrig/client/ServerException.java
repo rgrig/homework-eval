@@ -1,9 +1,9 @@
 package org.rgrig.client;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.rpc.*;
+//RM import com.google.gwt.core.client.*;
+//RM import com.google.gwt.user.client.rpc.*;
 
-public class ServerException extends SerializableException {
+public class ServerException extends Exception {
   public ServerException(String reason) {
     super(reason);
   }

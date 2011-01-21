@@ -1,10 +1,12 @@
 package org.rgrig.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
-public class QuizSubmitter implements ClickListener {
+public class QuizSubmitter implements ClickHandler {
   public HomeworkEvalSrvAsync srv;
   public Quiz quiz;
   public Panel panel;
@@ -25,13 +27,13 @@ public class QuizSubmitter implements ClickListener {
     this.pseudonym = pseudonym;
   }
 
-  public void onClick(Widget sender) {
+  public void onClick(ClickEvent event) {
     WaitPopup.Show();
     String s = "";
     for (int i = 0; i < answers.length; ++i) {
       char n = ' ';
       for (int j = 0; j < answers[i].length; ++j)
-        if (answers[i][j].isChecked()) n = (char)((int)'a' + j);
+        if (answers[i][j].getValue()) n = (char)((int)'a' + j);
       s += n;
     }
     srv.judgeQuiz(quiz.id, s, new Aac() {
