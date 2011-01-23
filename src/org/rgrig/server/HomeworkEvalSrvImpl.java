@@ -106,6 +106,7 @@ public class HomeworkEvalSrvImpl
   public String login(String pseudonym, String passwd) 
   throws ServerException {
     try {
+      if (db == null) throw new ServerException("No database.");
       String id = db.checkLogin(pseudonym, UtilSrv.sha(passwd));
       if (id == null) return null;
       HttpSession s = getThreadLocalRequest().getSession();

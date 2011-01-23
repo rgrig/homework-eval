@@ -19,6 +19,20 @@ Step 2. Append the following to /etc/tomcat6/policy.d/50local.policy
 Step 3.
   sudo cp -r homework-eval-db /home
   find /home/homework-eval-db | xargs sudo chown tomcat6
+  sudo chmod 750 /home/homework-eval-db
+You should now be able to login with pseudonym "foo" and password "bar".
+The last step is required in order to hide the test data from contestants.
+You may also want to run "chmod o-rx HOME" for other HOME directories that
+should be inaccessible to the user created at the next step.
+
+Step 4.
+  sudo adduser jailrun # password may be weak
+  sudo gcc -O3 -g limit.c -o /usr/bin/limit
+  sudo visudo
+In the editor, add the following lines at the end
+  # Allow tomcat6 to run /usr/bin/limit while prentending to be jailrun,
+  # without needing jailrun's password.
+  tomcat6 ALL = (jailrun) NOPASSWD: /usr/bin/limit
 
 If something doesn't work, try to restart tomcat.
   sudo /etc/init.d/tomcat6 restart

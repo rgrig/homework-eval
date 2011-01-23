@@ -1,0 +1,4 @@
+save PB.cpp
+compile g++ -O2 PB.cpp -o PB.exe
+executable PB.exe
+run ./PB.exe

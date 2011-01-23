@@ -264,6 +264,7 @@ public class FileDatabase implements Database {
     }
   }
 
+  // TODO: Get rid of the Student ID, from everywhere.
   public String checkLogin(String pseudonym, String passwdHash) {
     try {
       Scanner s = new Scanner(file("accounts"));

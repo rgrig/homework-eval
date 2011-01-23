@@ -155,6 +155,7 @@ log.fine("OK");
     StreamReader rErr = new StreamReader(p.getErrorStream());
     rOut.start(); rErr.start();
 
+    // TODO I think this may block for big tests. Check and Fix.
     // send and receive data "in parallel"
     writer.write(data);
     writer.flush(); writer.close();

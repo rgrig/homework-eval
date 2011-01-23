@@ -1,0 +1,4 @@
+save PB.java
+compile javac PB.java
+executable PB.class
+run java PB

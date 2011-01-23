@@ -23,6 +23,7 @@ public class HomeworkEvalApp implements EntryPoint {
 
   public void onModuleLoad() {
     srv = GWT.create(HomeworkEvalSrv.class);
+    // TODO Check that the server is ready (has database, answers our RPCs, ..)
     setupLogin();
   }
 
