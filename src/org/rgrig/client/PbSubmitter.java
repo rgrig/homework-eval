@@ -38,7 +38,7 @@ public class PbSubmitter implements ClickHandler {
       public void onSuccess(Object result) {
         PbEval eval = (PbEval)result;
         WaitPopup.Hide();
-        problem.score = eval.score;
+        problem.score = Math.max(eval.score, problem.score);
         score.setText(Util.pointsStr(problem.score, problem.totalScore));
         if (!eval.compiled) {
           Window.alert("The code does not compile.\n" + 

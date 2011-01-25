@@ -4,29 +4,25 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 public class DeadlineTimer extends Timer {
-  public int minutes;
+  public long deadline;
   public Label lbl;
   public Panel panel;
   
-  public DeadlineTimer(int minutes, Label lbl, Panel panel) {
-    this.minutes = minutes;
+  public DeadlineTimer(long deadline, Label lbl, Panel panel) {
+    this.deadline = deadline;
     this.lbl = lbl;
     this.panel = panel;
-    write();
+    scheduleRepeating(1000);
   }
 
   public void run() {
-    if (minutes <= 0)  {
+    if (System.currentTimeMillis() >= deadline)  {
       panel.clear();
       panel.add(new Label("Deadline passed. Sorry."));
     } else {
-      write();
-      --minutes;
-      schedule(59950); // intentionally a bit fast
+      int minutes = 
+        (int) ((deadline - System.currentTimeMillis()) / 1000l / 60l);
+      lbl.setText(Util.deadlineStr(minutes));
     }
-  }
-
-  public void write() {
-    lbl.setText(Util.deadlineStr(minutes));
   }
 }

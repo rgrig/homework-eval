@@ -12,27 +12,22 @@ public interface Database {
   public String getQuizAnswer(String quizId) throws ServerException;
   public PbTest[] getProblemExamples(String pbId) throws ServerException;
   public PbTest[] getProblemTests(String pbId) throws ServerException;
-  public PbLimit getProblemLimits(String pbId) throws ServerException;
+  public PbProperties getProblemProperties(String pbId) throws ServerException;
 
   public String[] getLanguages() throws ServerException;
   public Language getLanguage(String id) throws ServerException;
 
-  public double getTotalScore()
-    throws ServerException;
-  public double getScore(String task) 
-    throws ServerException;
+  public double getTotalScore() throws ServerException;
+  @Deprecated public double getScore(String task) throws ServerException;
 
-  /* TODO
   public void recordPbSubmission(PbSubmission submission)
     throws ServerException;
-  public List<Submission> getSubmissionsByPseudonymAndProblem(String pseudonym, String problem)
-    throws ServerException; */
+  public List<PbSubmission> getPbSubmissions(PbSubmission query)
+    throws ServerException; // POST: result is sorted by time
 
-  @Deprecated public double getScore(String pseudo, String task)
+  public void recordQuizSubmission(QuizSubmission submission)
     throws ServerException;
-  @Deprecated public User[] getScores()
-    throws ServerException;
-  @Deprecated public void setScore(String pseudo, String task, double score)
+  public List<QuizSubmission> getQuizSubmissions(QuizSubmission query)
     throws ServerException;
 
   public boolean checkLogin(String pseudonym, String passwdHash) 

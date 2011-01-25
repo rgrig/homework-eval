@@ -50,26 +50,12 @@ public class HomeworkEvalSrvImpl
     }
   }
 
-  private void fillInScores(List<Task> ts) throws ServerException {
-    String p = getPseudonym();
-    for (Task t : ts) {
-      t.score = db.getScore(p, t.id);
-      if (t.score >= 0.0) t.tried = true;
-    }
-  }
-
   /* TODO: the duplicated code in the following two functions is ugly */
   private ArrayList<Task> keepActive(Task[] ts) {
     ArrayList<Task> r = new ArrayList<Task>();
-    Calendar now = Calendar.getInstance();
-    Calendar start = Calendar.getInstance();
-    Calendar deadline = Calendar.getInstance();
+    long now = System.currentTimeMillis();
     for (Task t : ts) {
-      parseDate(start, t.start);
-      parseDate(deadline, t.deadline);
-      if (start.after(now) || now.after(deadline)) continue;
-      t.secondsToDeadline = (int)
-        ((deadline.getTimeInMillis() - now.getTimeInMillis()) / 1000l);
+      if (t.start > now || now > t.deadline) continue;
       r.add(t);
     }
     return r;
@@ -77,11 +63,9 @@ public class HomeworkEvalSrvImpl
 
   private ArrayList<Task> keepSeen(Task[] ts) {
     ArrayList<Task> r = new ArrayList<Task>();
-    Calendar now = Calendar.getInstance();
-    Calendar start = Calendar.getInstance();
+    long now = System.currentTimeMillis();
     for (Task t : ts) {
-      parseDate(start, t.start);
-      if (start.after(now)) continue;
+      if (t.start > now) continue;
       r.add(t);
     }
     return r;
@@ -89,13 +73,27 @@ public class HomeworkEvalSrvImpl
 
   public Problem[] getProblems() throws ServerException {
     ArrayList<Task> pbs = keepActive(db.getProblems());
-    fillInScores(pbs);
+    for (Task t : pbs) {
+      Problem p = (Problem) t;
+      List<PbSubmission> submissions = 
+          db.getPbSubmissions(PbSubmission.query(getPseudonym(), p.id));
+      p.score = -1.0;
+      p.attempts = 0;
+      int attempts = 0;
+      for (PbSubmission s : submissions) {
+        if (s.points() > p.score) {
+          p.score = s.points();
+          p.attempts = attempts;
+        }
+        ++attempts;
+      }
+    }
     return pbs.toArray(new Problem[0]);
   }
 
   public Quiz[] getQuizzes() throws ServerException {
     ArrayList<Task> qs = keepActive(db.getQuizzes());
-    fillInScores(qs);
+    // TODO: fill in scores
     return qs.toArray(new Quiz[0]);
   }
 
@@ -142,7 +140,8 @@ public class HomeworkEvalSrvImpl
         r.score = -1.0;
         return r;
       }
-      String solhash = String.format("%x", System.currentTimeMillis());
+      long now = System.currentTimeMillis();
+      String solhash = String.format("%x", now);
       try {
         File sollog = new File(DATABASE+"/log/"+solhash);
         FileWriter solwriter = new FileWriter(sollog);
@@ -161,19 +160,19 @@ public class HomeworkEvalSrvImpl
         r.compiled = true;
         PbTest[] examples = db.getProblemExamples(problem);
         PbTest[] tests = db.getProblemTests(problem);
-        PbLimit pl = db.getProblemLimits(problem);
+        PbProperties pp = db.getProblemProperties(problem);
 
         int okExamples=0, okTests=0;
-        okExamples = judge.run(examples, pl.timelimit, pl.memlimit);
+        okExamples = judge.run(examples, pp.timeLimit(), pp.memoryLimit());
         r.exampleOut = judge.getOut();
         r.exampleErr = judge.getErr();
         if (okExamples != examples.length) r.score = 0.0;
         else {
-          okTests = judge.run(tests, pl.timelimit, pl.memlimit);
-          r.score = (double) okTests * db.getScore(problem) / tests.length;
+          okTests = judge.run(tests, pp.timeLimit(), pp.memoryLimit());
+          r.score = (double) okTests * pp.score() / tests.length;
         }
       }
-      db.setScore(pseudonym, problem, r.score);
+      db.recordPbSubmission(new PbSubmission(pseudonym, problem, r.score, now));
       return r;
     } finally {
       unlock();
@@ -193,22 +192,83 @@ public class HomeworkEvalSrvImpl
         + " pseudonym=" + pseudonym
         + " quiz=" + quiz
         + " solution=" + solution);
-      if (db.getScore(pseudonym, quiz) >= 0) return -1.0;
+      List<QuizSubmission> previousSubmissions = 
+        db.getQuizSubmissions(QuizSubmission.query(getPseudonym(), quiz));
+      if (!previousSubmissions.isEmpty())
+        throw new ServerException("You can submit quizzes only once.");
       String reference = db.getQuizAnswer(quiz);
       if (reference == null || reference.length() != solution.length())
         throw new ServerException("Quiz judging failed: " + reference.length() + ":" + solution.length());
       for (int i = 0; i < reference.length(); ++i)
         if (reference.charAt(i) == solution.charAt(i)) ++correct;
       double score = (double) correct * db.getScore(quiz) / reference.length();
-      db.setScore(pseudonym, quiz, score);
+      db.recordQuizSubmission(new QuizSubmission(
+            getPseudonym(), quiz, score));
       return score;
     } finally {
       unlock();
     }
   }
 
+  private static class ProblemAttemptData {
+    public int count;
+    public int attempts;
+    public double points;
+    public long time;
+  }
+
+  // TODO This code is HORRIBLE!
   public User[] getScores() throws ServerException {
-    return db.getScores();
+    try {
+      List<PbSubmission> problemSubmissions = 
+          db.getPbSubmissions(PbSubmission.query(null, null));
+      HashMap<PairPseudonymTask, ProblemAttemptData> acc =
+          new HashMap<PairPseudonymTask, ProblemAttemptData>();
+      for (PbSubmission submission : problemSubmissions) {
+        PairPseudonymTask key = new PairPseudonymTask(
+            submission.pseudonym(), submission.problem());
+        ProblemAttemptData data = acc.get(key);
+        if (data == null) {
+          data = new ProblemAttemptData();
+          data.points = -1.0;
+          acc.put(key, data);
+        }
+        if (submission.points() > data.points) {
+          data.points = submission.points();
+          data.attempts = data.count;
+          data.time = submission.time();
+        }
+        ++data.count;
+      }
+      HashMap<String, User> byPseudonym = new HashMap<String, User>();
+      HashMap<String, PbProperties> pbProperties = 
+          new HashMap<String, PbProperties>();
+      for (Map.Entry<PairPseudonymTask, ProblemAttemptData> e : acc.entrySet()) {
+        String pb = e.getKey().task();
+        if (!pbProperties.containsKey(pb))
+          pbProperties.put(pb, db.getProblemProperties(pb));
+      }
+      for (Map.Entry<PairPseudonymTask, ProblemAttemptData> e : acc.entrySet()) {
+        User u = byPseudonym.get(e.getKey().pseudonym());
+        if (u == null) {
+          u = new User();
+          u.pseudonym = e.getKey().pseudonym();
+          byPseudonym.put(u.pseudonym, u);
+        }
+        if (e.getValue().points > 0.0) {
+          u.score += e.getValue().points;
+          u.penalty += 
+              (e.getValue().time - pbProperties.get(e.getKey().task()).start())
+              / 1000.0 / 60.0;
+          u.penalty +=
+            e.getValue().attempts 
+            * pbProperties.get(e.getKey().task()).penalty();
+        }
+      }
+      return byPseudonym.values().toArray(new User[0]);
+    } catch (Throwable t) {
+      throw UtilSrv.se("Failed to get scoreboard.", t);
+    }
   }
 
   public double scoreScale() throws ServerException {
@@ -237,20 +297,6 @@ public class HomeworkEvalSrvImpl
   private void unlock() {
     // TODO: release the file lock here, if it gets acquired
     L.unlock();
-  }
-
-  private static void parseDate(Calendar c, String date) {
-    int year = 2008, month = 0, day = 1, hour = 0, minute = 0;
-    Scanner s = new Scanner(date).useDelimiter("[^0-9]+");
-    try {
-      year = s.nextInt();
-      month = s.nextInt() - 1;
-      day = s.nextInt();
-      hour = s.nextInt();
-      minute = s.nextInt();
-    } catch (Exception e) {}
-    c.clear();
-    c.set(year, month, day, hour, minute);
   }
 }
 

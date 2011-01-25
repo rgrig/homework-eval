@@ -6,6 +6,8 @@ public class Util {
   public static String pointsStr(double score, double totalScore) {
     if (score < 0.0)
       return "You did not try to solve this problem yet.";
+    if (Math.abs(score - totalScore) < 1e-9)
+      return "You solved this problem. Congratulations!"; 
     String r = "You have " + score + " point";
     if (score != 1.0) r += "s";
     r += " out of " + totalScore + ".";

@@ -63,17 +63,20 @@ public class HomeworkEvalApp implements EntryPoint {
     srv.getQuizzes(new Aac() {
       public void onSuccess(Object result) {
         quiz = (Quiz[])result; ++gotInfo;
+//Window.alert("got quizzes");
         if (gotInfo == 3) setupMainAreaHelper();
       }
     });
     srv.getProblems(new Aac() {
       public void onSuccess(Object result) {
+//Window.alert("got problems");
         problem = (Problem[])result; ++gotInfo;
         if (gotInfo == 3) setupMainAreaHelper();
       }
     });
     srv.getLanguages(new Aac() {
       public void onSuccess(Object result) {
+//Window.alert("got languages");
         languages = (String[])result; ++gotInfo;
         if (gotInfo == 3) setupMainAreaHelper();
       }

@@ -38,7 +38,7 @@ public class MainPanel extends TabPanel {
     this.languages = languages;
     this.app = app;
     srv = app.srv;
-    setWidth("600px");
+    setWidth("600px"); // TODO Isn't this in css?
     Arrays.sort(languages);
 
     quizPanel = new VerticalPanel[quiz.length];
@@ -59,13 +59,13 @@ public class MainPanel extends TabPanel {
   }
 
   private void addQuiz(int idx) {
+//Window.alert("start MainPanel.addQuiz");
     Quiz q = quiz[idx];
     Panel p = quizPanel[idx] = new VerticalPanel();
-    if (!q.tried) {
+    if (q.score >= 0.0) {
       p.add(new Label(Util.pointsStr(0.0, q.totalScore)));
       Label d = quizDeadline[idx] = new Label();
-      DeadlineTimer dt = new DeadlineTimer(q.secondsToDeadline / 60, d, p);
-      dt.schedule((q.secondsToDeadline % 60 * 1000)|1);
+      DeadlineTimer dt = new DeadlineTimer(q.deadline, d, p);
       p.add(d);
       p.add(new HTML("<hr/>"));
 
@@ -93,14 +93,14 @@ public class MainPanel extends TabPanel {
 
   // TODO: Eliminate code duplication
   private void addPb(int idx) {
+//Window.alert("start MainPanel.addPb");
     Problem pb = problem[idx];
     Panel p = pbPanel[idx] = new VerticalPanel();
 
     final Label scoreL = new Label(Util.pointsStr(pb.score, pb.totalScore));
     p.add(scoreL);
     Label d = pbDeadline[idx] = new Label();
-    DeadlineTimer dt = new DeadlineTimer(pb.secondsToDeadline / 60, d, p);
-    dt.schedule((pb.secondsToDeadline % 60 * 1000)|1);
+    DeadlineTimer dt = new DeadlineTimer(pb.deadline, d, p);
     p.add(d);
 
     TextArea ta = pbSolution[idx] = new TextArea();
@@ -139,9 +139,11 @@ public class MainPanel extends TabPanel {
     p.add(fp);
 
     add(p, pb.name);
+//Window.alert("stop MainPanel.addPb, pb.name=" + pb.name);
   }
 
   private void addScores() {
+//Window.alert("MainPanel.addScores");
     add(scoresPanel, "Scores");
     scoresPanel.clear();
     final FlexTable table = new FlexTable();
@@ -159,11 +161,13 @@ public class MainPanel extends TabPanel {
     final HTMLTable.RowFormatter rf = t.getRowFormatter();
     final HTMLTable.CellFormatter cf = t.getCellFormatter();
     t.setText(0,0,"Pseudonym"); 
-    t.setText(0,1,"Score"); 
-    t.setText(0,2,"Final (est.)");
+    t.setText(0,1,"Score");
+    t.setText(0,2,"Penalty");
+    t.setText(0,3,"Final (est.)");
     cf.setStyleName(0, 0, "gwt-FlexTable-cell-header");
     cf.setStyleName(0, 1, "gwt-FlexTable-cell-header");
     cf.setStyleName(0, 2, "gwt-FlexTable-cell-header");
+    cf.setStyleName(0, 3, "gwt-FlexTable-cell-header");
 
     srv.scoreScale(new Aac() {
       public void onSuccess(Object result) {
@@ -173,13 +177,14 @@ public class MainPanel extends TabPanel {
             User[] users = (User[]) result;
             Arrays.sort(users);
             for (int i = 0; i < users.length; ++i) {
-              t.setText(i+1,0,
-                users[i].pseudonym);
-              t.setText(i+1,1,format(1,users[i].score));
-              t.setText(i+1,2,format(0,scale*users[i].score));
+              t.setText(i+1,0,users[i].pseudonym);
+              t.setText(i+1,1,"" + Math.round(users[i].score));
+              t.setText(i+1,2,"" + Math.round(users[i].penalty));
+              t.setText(i+1,3,"" + Math.round(scale*users[i].score));
               cf.setStyleName(i+1,0,"gwt-FlexTable-cell");
               cf.setStyleName(i+1,1,"gwt-FlexTable-cell");
               cf.setStyleName(i+1,2,"gwt-FlexTable-cell");
+              cf.setStyleName(i+1,3,"gwt-FlexTable-cell");
               if (app.pseudonym.getText().equals(users[i].pseudonym))
                 rf.setStyleName(i+1, "gwt-FlexTable-row-selected");
               else
@@ -191,19 +196,6 @@ public class MainPanel extends TabPanel {
         });
       }
     });
-  }
-
-  /* TODO this is completely brain-dead, fix */
-  private static String format(int precision, double number) {
-    int i;
-    for (i = 0; i < precision; ++i) number *= 10.0;
-    if (number > 1000000 || number < -1000000) return "OOPS";
-    String s = "" + (int)(number+0.5);
-    if (precision <= 0) return s;
-    int missing = precision + 1 - s.length();
-    for (i = 0; i < missing; ++i) s = "0" + s;
-    return s.substring(0, s.length() - precision) + "." + 
-      s.substring(s.length() - precision);
   }
 }
 

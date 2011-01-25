@@ -57,6 +57,21 @@ public class FileDatabase implements Database {
     return getProperty("quizzes", quiz, key);
   }
 
+  // TODO Read the config files only once!
+  public PbProperties getProblemProperties(String problem) 
+      throws ServerException
+  {
+    return PbProperties.empty()
+      .withName(getPbProperty(problem, "name"))
+      .withPenalty(Double.valueOf(getPbProperty(problem, "penalty")))
+      .withScore(Double.valueOf(getPbProperty(problem, "score")))
+      .withMemoryLimit(Integer.valueOf(getPbProperty(problem, "memlimit")))
+      .withTimeLimit(Integer.valueOf(getPbProperty(problem, "timelimit")))
+      .withDeadline(parseDate(getPbProperty(problem, "deadline")))
+      .withStart(parseDate(getPbProperty(problem, "start")))
+      .check();
+  }
+
   public Quiz[] getQuizzes() throws ServerException {
     try {
       ArrayList<Quiz> result = new ArrayList<Quiz>();
@@ -65,8 +80,8 @@ public class FileDatabase implements Database {
         String id = qf.getName();
         if (!qf.isDirectory() || id.startsWith(".")) continue;
         Quiz q = new Quiz();
-        q.start = getQuizProperty(id, "start");
-        q.deadline = getQuizProperty(id, "deadline");
+        q.start = parseDate(getQuizProperty(id, "start"));
+        q.deadline = parseDate(getQuizProperty(id, "deadline"));
         q.id = id;
         q.name = getQuizProperty(id, "name");
         q.totalScore = Double.parseDouble(getQuizProperty(id, "score"));
@@ -88,13 +103,13 @@ public class FileDatabase implements Database {
         String id = pf.getName(); ids += ":" + id;
         if (!pf.isDirectory() || id.startsWith(".")) continue;
 
-        // task stuff
         Problem p = new Problem();
-        p.start = getPbProperty(id, "start");
-        p.deadline = getPbProperty(id, "deadline");
-        p.id = pf.getName();
-        p.name = getPbProperty(p.id, "name");
-        p.totalScore = Double.parseDouble(getPbProperty(p.id, "score"));
+        PbProperties pp = getProblemProperties(id);
+        p.start = pp.start();
+        p.deadline = pp.deadline();
+        p.id = id;
+        p.name = pp.name();
+        p.totalScore = pp.score();
        
         // specific to problems
         p.statement = UtilSrv.readFile(new File(pf, "statement"));
@@ -144,13 +159,6 @@ public class FileDatabase implements Database {
     } catch (IOException e) {
       throw UtilSrv.se("Can't fetch tests for " + pbId, e);
     }
-  }
-
-  public PbLimit getProblemLimits(String pbId) throws ServerException {
-    PbLimit l = new PbLimit();
-    l.timelimit = Integer.parseInt(getPbProperty(pbId, "timelimit"));
-    l.memlimit = Integer.parseInt(getPbProperty(pbId, "memlimit"));
-    return l;
   }
 
   public String[] getLanguages() throws ServerException {
@@ -203,65 +211,78 @@ public class FileDatabase implements Database {
     }
   }
 
-  public double getScore(String pseudo, String task) 
-  throws ServerException {
+  public void recordPbSubmission(PbSubmission submission)
+      throws ServerException 
+  {
+    PrintWriter pw = null;
     try {
-      File pf = file("scores", pseudo);
-      pf.createNewFile();
-      Properties p = new Properties();
-      FileInputStream fis = new FileInputStream(pf);
-      p.load(fis); fis.close();
-      String ss = p.getProperty(task);
-      if (ss == null) return -1.0;
-      return Double.parseDouble(ss);
-    } catch (IOException e) {
-      throw new ServerException("Can't read your score for task " + task);
+      pw = new PrintWriter(new FileWriter(file("scores", "problems"), true));
+      pw.printf("%s %s %f %x\n", 
+          submission.pseudonym(),
+          submission.problem(),
+          submission.points(),
+          submission.time());
+      pw.flush();
+      pw.close();
+    } catch (Throwable t) {
+      throw UtilSrv.se("Cannot record problem submission.", t);
     }
   }
 
-  public User[] getScores() 
-  throws ServerException {
+  public List<PbSubmission> getPbSubmissions(PbSubmission query)
+      throws ServerException
+  {
+    // Check that unused fields are unused.
+    assert (query.points() < 0.0);
+    assert (query.time() < 0);
+
+    BufferedReader br = null;
+    List<PbSubmission> result = new ArrayList<PbSubmission>();
     try {
-      ArrayList<User> result = new ArrayList<User>();
-      ArrayList<String> tasks = new ArrayList<String>();
-      for (File q : file("quizzes").listFiles()) 
-        if (q.isDirectory() && !q.getName().startsWith("."))
-          tasks.add(q.getName());
-      for (File p : file("problems").listFiles()) 
-        if (p.isDirectory() && !p.getName().startsWith("."))
-          tasks.add(p.getName());
-      for (File u : file("scores").listFiles()) {
-        if (u.isDirectory() || u.getName().startsWith(".")) continue;
-        User uu = new User();
-        uu.pseudonym = u.getName();
-        Properties up = new Properties();
-        up.load(new FileInputStream(u));
-        for (String t : tasks) {
-          String points = up.getProperty(t, "0.0");
-          uu.score += Double.parseDouble(points);
-        }
-        result.add(uu);
+      br = new BufferedReader(new FileReader(file("scores", "problems")));
+      String line;
+      while ((line = br.readLine()) != null) {
+        Scanner scan = new Scanner(line);
+        String pseudonym = scan.next();
+        String problem = scan.next();
+        double points = scan.nextDouble();
+        long time = scan.nextLong(16);
+        if (query.pseudonym() != null 
+            && !query.pseudonym().equals(pseudonym)) continue;
+        if (query.problem() != null
+            && !query.problem().equals(problem)) continue;
+        result.add(new PbSubmission(pseudonym, problem, points, time));
       }
-      return result.toArray(new User[0]);
-    } catch (IOException e) {
-      throw UtilSrv.se("Can't retrieve scores.", e);
+      br.close();
+    } catch (FileNotFoundException e) {
+      // That's fine: We just return an empty list.
+    } catch (Throwable t) {
+      throw UtilSrv.se("Cannot lookup problem submission.", t);
+    } 
+    return result;
+  }
+
+  public void recordQuizSubmission(QuizSubmission submission)
+      throws ServerException
+  {
+    try {
+      // TODO
+    } catch (Throwable t) {
+      throw UtilSrv.se("Cannot record quiz submission.", t);
     }
   }
 
-  public void setScore(String pseudo, String task, double score) 
-  throws ServerException {
+  public List<QuizSubmission> getQuizSubmissions(QuizSubmission query)
+      throws ServerException
+  {
     try {
-      File pf = file("scores", pseudo);
-      pf.createNewFile();
-      Properties p = new Properties();
-      FileInputStream fis = new FileInputStream(pf);
-      p.load(fis); fis.close();
-      p.setProperty(task, ""+score);
-      FileOutputStream fos = new FileOutputStream(pf);
-      p.store(fos, "no comment"); fos.close();
-    } catch (IOException e) {
-      throw new ServerException("Can't save your score!");
+      // TODO
+//    } catch (FileNotFoundException e) {
+      // That's fine: We just return an empty list.
+    } catch (Throwable t) {
+      throw UtilSrv.se("Cannot lookup quiz submissions.", t);
     }
+    return null;
   }
 
   public boolean checkLogin(String pseudonym, String passwdHash) {
@@ -329,5 +350,22 @@ public class FileDatabase implements Database {
     }
     return result.toArray(new PbTest[0]);
   }
+
+  private static long parseDate(String date) {
+    int year = 2008, month = 0, day = 1, hour = 0, minute = 0;
+    Scanner scan = new Scanner(date).useDelimiter("[^0-9]+");
+    try {
+      year = scan.nextInt();
+      month = scan.nextInt() - 1;
+      day = scan.nextInt();
+      hour = scan.nextInt();
+      minute = scan.nextInt();
+    } catch (Exception e) {}
+    Calendar c = Calendar.getInstance();
+    c.clear();
+    c.set(year, month, day, hour, minute);
+    return c.getTimeInMillis();
+  }
+
 }
 

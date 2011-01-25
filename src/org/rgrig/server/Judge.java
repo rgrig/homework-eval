@@ -73,10 +73,10 @@ public class Judge {
     try {
       createSrcFile();
       File f = new File(workDir, srcFileName);
-      FileWriter fw = new FileWriter(f, true); // `true' needed on Fedora. Huh?
+      FileWriter fw = new FileWriter(f);
       fw.write(sol);
       fw.close();
-      exec(compileCmd, "", 2, 256);
+      exec(compileCmd, "", 2, 2048);
       File ef = new File(workDir, executableName);
       return ef.exists();
     } catch (Exception e) {
