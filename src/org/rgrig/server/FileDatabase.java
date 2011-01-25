@@ -264,18 +264,16 @@ public class FileDatabase implements Database {
     }
   }
 
-  // TODO: Get rid of the Student ID, from everywhere.
-  public String checkLogin(String pseudonym, String passwdHash) {
+  public boolean checkLogin(String pseudonym, String passwdHash) {
     try {
       Scanner s = new Scanner(file("accounts"));
       while (s.hasNext()) {
-        String id = s.next();
         String p = s.next();
         String ph = s.next();
-        if (pseudonym.equals(p) && passwdHash.equals(ph)) return id;
+        if (pseudonym.equals(p) && passwdHash.equals(ph)) return true;
       }
     } catch (IOException e) {}
-    return null;
+    return false;
   }
 
   private QuizQuestion[] parseQuizQuestions(File qd) 

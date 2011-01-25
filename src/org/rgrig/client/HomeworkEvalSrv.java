@@ -19,7 +19,7 @@ public interface HomeworkEvalSrv extends RemoteService {
   public String[] getLanguages() throws ServerException;
 
   /* Functions for logging in and out. */
-  public String login(String pseudonym, String passwd) throws ServerException;
+  public boolean login(String pseudonym, String passwd) throws ServerException;
   public void logout() throws ServerException;
 
   /* Judging functions. */

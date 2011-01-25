@@ -103,16 +103,17 @@ public class HomeworkEvalSrvImpl
     return db.getLanguages();
   }
 
-  public String login(String pseudonym, String passwd) 
+  public boolean login(String pseudonym, String passwd) 
   throws ServerException {
     try {
       if (db == null) throw new ServerException("No database.");
-      String id = db.checkLogin(pseudonym, UtilSrv.sha(passwd));
-      if (id == null) return null;
-      HttpSession s = getThreadLocalRequest().getSession();
-      s.setAttribute("pseudonym", pseudonym);
-      log.info("login " + pseudonym);
-      return id;
+      boolean ok = db.checkLogin(pseudonym, UtilSrv.sha(passwd));
+      if (ok) {
+        HttpSession s = getThreadLocalRequest().getSession();
+        s.setAttribute("pseudonym", pseudonym);
+        log.info("login " + pseudonym);
+      }
+      return ok;
     } catch (java.security.NoSuchAlgorithmException e) {
       throw UtilSrv.se("Can't verify your login (A)", e);
     } catch (java.io.UnsupportedEncodingException e) {

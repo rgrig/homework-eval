@@ -17,7 +17,6 @@ public class HomeworkEvalApp implements EntryPoint {
   public Problem[] problem;
   public String[] languages;
 
-  public String studentId;
   public final TextBox pseudonym = new TextBox();
   public final PasswordTextBox password = new PasswordTextBox();
 
@@ -47,8 +46,7 @@ public class HomeworkEvalApp implements EntryPoint {
       public void onClick(ClickEvent event) {
         srv.login(pseudonym.getText(), password.getText(), new Aac() {
           public void onSuccess(Object result) {
-            studentId = (String)result;
-            if (studentId != null) setupMainArea();
+            if ((Boolean) result) setupMainArea();
             else failed.setVisible(true);
           }
         });

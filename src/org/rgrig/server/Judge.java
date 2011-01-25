@@ -73,7 +73,7 @@ public class Judge {
     try {
       createSrcFile();
       File f = new File(workDir, srcFileName);
-      FileWriter fw = new FileWriter(f);
+      FileWriter fw = new FileWriter(f, true); // `true' needed on Fedora. Huh?
       fw.write(sol);
       fw.close();
       exec(compileCmd, "", 2, 256);
@@ -144,7 +144,7 @@ log.fine("OK");
     cmd.add("-w"); cmd.add(""+(3*timelimit+1));
     cmd.add("-x"); cmd.add(cmdS);
     String tmp = "";
-    for (String cs : cmd) tmp += " " + cs;
+    for (String cs : cmd) tmp += " \"" + cs + "\"";
     log.fine("exec " + tmp);
     ProcessBuilder pb = new ProcessBuilder(cmd);
     pb.directory(workDir);

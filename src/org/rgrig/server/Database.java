@@ -21,14 +21,20 @@ public interface Database {
     throws ServerException;
   public double getScore(String task) 
     throws ServerException;
-  public double getScore(String pseudo, String task)
+
+  /* TODO
+  public void recordPbSubmission(PbSubmission submission)
     throws ServerException;
-  public User[] getScores()
+  public List<Submission> getSubmissionsByPseudonymAndProblem(String pseudonym, String problem)
+    throws ServerException; */
+
+  @Deprecated public double getScore(String pseudo, String task)
     throws ServerException;
-  public void setScore(String pseudo, String task, double score)
+  @Deprecated public User[] getScores()
+    throws ServerException;
+  @Deprecated public void setScore(String pseudo, String task, double score)
     throws ServerException;
 
-  /** Returns the student ID, or null if the check fails. */
-  public String checkLogin(String pseudonym, String passwdHash) 
+  public boolean checkLogin(String pseudonym, String passwdHash) 
     throws ServerException;
 }
