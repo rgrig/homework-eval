@@ -111,6 +111,7 @@ public class HomeworkEvalSrvImpl
       if (ok) {
         HttpSession s = getThreadLocalRequest().getSession();
         s.setAttribute("pseudonym", pseudonym);
+        s.setMaxInactiveInterval(-1);
         log.info("login " + pseudonym);
       }
       return ok;
