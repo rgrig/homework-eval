@@ -36,17 +36,12 @@ public class PbSubmitter implements ClickHandler {
     }
     srv.judgeProblem(problem.id, l, solution.getText(), new Aac() {
       public void onSuccess(Object result) {
+        if (result == null) return; // TODO: logout
         PbEval eval = (PbEval)result;
         WaitPopup.Hide();
         problem.score = Math.max(eval.score, problem.score);
         score.setText(Util.pointsStr(problem.score, problem.totalScore));
-        if (!eval.compiled) {
-          Window.alert("The code does not compile.\n" + 
-            "Please try to compile it locally before submitting.");
-          return;
-        }
-        if (problem.score >= 0.0)
-          ExamplesDialog.Show(eval.exampleOut, eval.exampleErr);
+        JudgeResultDialog.show(eval);
       }
       public void onFailure(Throwable caught) {
         super.onFailure(caught);

@@ -136,10 +136,7 @@ public class HomeworkEvalSrvImpl
       lock();
       PbEval r = new PbEval();
       String pseudonym = getPseudonym();
-      if (pseudonym == null) {
-        r.score = -1.0;
-        return r;
-      }
+      if (pseudonym == null) return null;
       long now = System.currentTimeMillis();
       String solhash = String.format("%x", now);
       try {
