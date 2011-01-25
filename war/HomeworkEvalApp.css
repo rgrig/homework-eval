@@ -1,7 +1,7 @@
 body, html {
-  color: black;
+//  color: black;
   font-family: Helvetica, Verdana, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   height: 100%;
 }
 
@@ -48,11 +48,11 @@ b {
 }
 
 .gwt-FlexTable-row-normal {
-  background-color: #EEFFEE;
+  background-color: #EEEEFF;
 }
 
 .gwt-FlexTable-row-selected {
-  background-color: #00FF00;
+  background-color: #0000FF;
 }
 
 .small  {
@@ -63,64 +63,6 @@ b {
 
 .gwt-TabPanel {
   width: 100%;
-}
-
-.gwt-TabPanelBottom {
-  border: 2px solid #80FF80;
-  padding: 5px;
-}
-
-.gwt-TabBar {
-  background-color: #80FF80;
-}
-
-.gwt-TabBar .gwt-TabBarFirst {
-  height: 100%;
-  border-bottom: 1px solid #80FF80;
-  padding-left: 3px;
-}
-
-.gwt-TabBar .gwt-TabBarRest {
-  border-bottom: 1px solid #80FF80;
-  padding-right: 3px;
-}
-
-.gwt-TabBar .gwt-TabBarItem {
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 2px;
-  padding-right: 10px;
-  cursor: pointer;
-  cursor: hand;
-}
-
-.gwt-TabBar .gwt-TabBarItem-selected {
-  font-weight: bold;
-  background-color: #E8EEF7;
-  border: 1px solid #00FF00;
-  padding: 2px;
-  cursor: default;
-}
-
-.gwt-WaitPopup {
-  background-color: #002000;
-  color: #80FF80;
-  border: 3px solid black;
-  padding: 20px;
-}
-
-.gwt-DialogBox {
-  background-color: #EEFFEE;
-  color: black;
-  border: 2px solid black;
-  padding: 1px;
-}
-
-.gwt-DialogBox .Caption {
-  background-color: #006000;
-  color: white;
-  font-weight: bold;
-  padding: 3px;
 }
 
 .code {

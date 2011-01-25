@@ -38,7 +38,7 @@ public class MainPanel extends TabPanel {
     this.languages = languages;
     this.app = app;
     srv = app.srv;
-    setWidth("600px"); // TODO Isn't this in css?
+    setWidth("600px"); // TODO Move in CSS.
     Arrays.sort(languages);
 
     quizPanel = new VerticalPanel[quiz.length];
