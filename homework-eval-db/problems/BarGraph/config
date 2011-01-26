@@ -3,5 +3,4 @@ deadline 2020-01-01 16:30
 timelimit 1
 memlimit 256
 score 30
-penaltyPerAttempt 15
 name BarGraph
