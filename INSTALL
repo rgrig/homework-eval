@@ -5,20 +5,21 @@ Briefly:
 4. Create user `jailrun', and let servlet's server sudo as jailrun.
 
 Step 1.
-  sudo apt-get install tomcat6*
+  sudo apt-get install '^tomcat7.*'
   ant war
-  sudo cp HomeworkEvalApp.war /var/lib/tomcat6/webapps
+  sudo cp HomeworkEvalApp.war /var/lib/tomcat7/webapps
 At this point you should be able to see the login screen at
   http://localhost:8080/HomeworkEvalApp/
+You may want to use scripts/deploys.sh to repeloy the war file later.
 
-Step 2. Append the following to /etc/tomcat6/policy.d/50local.policy
+Step 2. Append the following to /etc/tomcat7/policy.d/50local.policy
   grant codeBase "file:${catalina.base}/webapps/HomeworkEvalApp/-" {
     permission java.security.AllPermision;
   }
 
 Step 3.
   sudo cp -r homework-eval-db /home
-  find /home/homework-eval-db | xargs sudo chown tomcat6
+  find /home/homework-eval-db | xargs sudo chown tomcat7
   sudo chmod 750 /home/homework-eval-db
 You should now be able to login with pseudonym "foo" and password "bar".
 The last step is required in order to hide the test data from contestants.
@@ -30,9 +31,10 @@ Step 4.
   sudo gcc -O3 -g limit.c -o /usr/bin/limit
   sudo visudo
 In the editor, add the following lines at the end
-  # Allow tomcat6 to run /usr/bin/limit while prentending to be jailrun,
+  # Allow tomcat7 to run /usr/bin/limit while prentending to be jailrun,
   # without needing jailrun's password.
-  tomcat6 ALL = (jailrun) NOPASSWD: /usr/bin/limit
+  tomcat7 ALL = (jailrun) NOPASSWD: /usr/bin/limit
+Now everything should work.
 
 If something doesn't work, try to restart tomcat.
-  sudo /etc/init.d/tomcat6 restart
+  sudo /etc/init.d/tomcat7 restart

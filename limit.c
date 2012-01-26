@@ -1,9 +1,12 @@
+#define _XOPEN_SOURCE 500
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <string.h>
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 void usage() {
   fprintf(stderr, "limit [-m MB] [-c SEC] [-w SEC] [-f KB] -x \"CMD\"\n");
@@ -13,6 +16,12 @@ void usage() {
   fprintf(stderr, "  -f  output file size\n");
   fprintf(stderr, "  -x  the command to execute\n");
   exit(1);
+}
+
+rlim_t parse_rlim_t(const char * s) {
+  unsigned x;
+  sscanf(s, "%u", &x);
+  return x;
 }
 
 /*
@@ -27,12 +36,11 @@ int main(int argc, char* argv[]) {
   int i;
   int child;
   int status;
-  int tle;
   struct rlimit cpu, mem, file, fcnt;
-  int wall;
+  rlim_t wall;
   struct timeval start_time, current_time;
   char* cmd;
-  int sec, usec; // elapsed wall time
+  unsigned sec, usec; // elapsed wall time
 
   /* defaults */
   wall = 180;               // 3 minutes
@@ -45,10 +53,10 @@ int main(int argc, char* argv[]) {
   if (!(argc&1)) usage();
   cmd = NULL;
   for (i = 1; i + 1 < argc; i += 2) {
-    if (!strcmp("-m", argv[i])) sscanf(argv[i+1], "%d", &mem.rlim_cur);
-    else if (!strcmp("-c", argv[i])) sscanf(argv[i+1], "%d", &cpu.rlim_cur);
-    else if (!strcmp("-w", argv[i])) sscanf(argv[i+1], "%d", &wall);
-    else if (!strcmp("-f", argv[i])) sscanf(argv[i+1], "%d", &file.rlim_cur);
+    if (!strcmp("-m", argv[i])) mem.rlim_cur = parse_rlim_t(argv[i+1]);
+    else if (!strcmp("-c", argv[i])) cpu.rlim_cur = parse_rlim_t(argv[i+1]);
+    else if (!strcmp("-w", argv[i])) wall = parse_rlim_t(argv[i+1]);
+    else if (!strcmp("-f", argv[i])) file.rlim_cur = parse_rlim_t(argv[i+1]);
     else if (!strcmp("-x", argv[i])) cmd = argv[i+1];
     else usage();
   }
@@ -82,7 +90,7 @@ int main(int argc, char* argv[]) {
   /* watch out for wall time limit */
   gettimeofday(&start_time, NULL);
   while (!waitpid(child, &status, WNOHANG)) {
-    usleep(25000);
+    usleep(25000);  // TODO(rgrig): Use a timer instead. See http://goo.gl/jGgHc
     gettimeofday(&current_time, NULL);
     sec = current_time.tv_sec - start_time.tv_sec;
     usec = current_time.tv_usec - start_time.tv_usec;

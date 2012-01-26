@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.*;
  * The interface between the client and the server.
  *
  * The client can ask for quizzes/problems, can ask for the available
- * languages, can log in and out, can ask for a quiz/problem to 
+ * languages, can log in and out, can ask for a quiz/problem to
  * be judged, and can ask for the current scores.
  */
 @RemoteServiceRelativePath("HomeworkEvalSrv")
@@ -25,7 +25,7 @@ public interface HomeworkEvalSrv extends RemoteService {
   /* Judging functions. */
   public PbEval judgeProblem(
     String problem,
-    String language, 
+    String language,
     String solution) throws ServerException;
   public double judgeQuiz(
     String quiz,

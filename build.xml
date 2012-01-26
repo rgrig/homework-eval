@@ -11,9 +11,6 @@
   </target>
   <!-- }}} -->
 
-  <!-- Arguments to gwtc and devmode targets -->
-  <property name="gwt.args" value="" />
-
   <!-- Configure path to GWT SDK -->
   <path id="project.class.path">
     <pathelement location="war/WEB-INF/classes"/>
@@ -23,7 +20,7 @@
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
   </path>
 
-  <target name="libs" depends="locals" if="locals.ok" 
+  <target name="libs" depends="locals" if="locals.ok"
       description="Copy libs to WEB-INF/lib">
     <mkdir dir="war/WEB-INF/lib" />
     <copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar" />
@@ -51,6 +48,8 @@
       <classpath>
         <pathelement location="src"/>
         <path refid="project.class.path"/>
+        <pathelement location="${gwt.sdk}/validation-api-1.0.0.GA.jar" />
+        <pathelement location="${gwt.sdk}/validation-api-1.0.0.GA-sources.jar" />
       </classpath>
       <!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
       <jvmarg value="-Xmx256M"/>
@@ -91,7 +90,7 @@ Test targets suppressed because -junit argument was not specified when running w
       <classpath refid="project.class.path"/>
     </javac>
   </target>
-  
+
   <target name="test.dev" depends="javac.tests" description="Run development mode tests">
     <mkdir dir="reports/htmlunit.dev" />
     <junit fork="yes" printsummary="yes" haltonfailure="yes">

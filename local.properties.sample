@@ -1,1 +1,2 @@
-gwt.sdk=/home/rg/tools/gwt-2.1.1
+gwt.sdk=/home/rg/tools/gwt-2.4.0
+gwt.args=-strict

@@ -32,7 +32,7 @@ public class HomeworkEvalSrvImpl
   public HomeworkEvalSrvImpl() {
     try {
       FileHandler logh = new FileHandler(
-        DATABASE+"/log/main"+String.format("%x", System.currentTimeMillis()));
+        DATABASE+String.format("/log/main%x", System.currentTimeMillis()));
       logh.setFormatter(new SimpleFormatter());
       log.addHandler(logh);
       log.setUseParentHandlers(true);
@@ -45,6 +45,7 @@ public class HomeworkEvalSrvImpl
       db = new FileDatabase(DATABASE);
       judge = new Judge(JUDGE_USER, JUDGE_HOME);
     } catch (IOException a) {
+System.err.println(a);
       db = null;
       judge = null;
     }
@@ -75,7 +76,7 @@ public class HomeworkEvalSrvImpl
     ArrayList<Task> pbs = keepActive(db.getProblems());
     for (Task t : pbs) {
       Problem p = (Problem) t;
-      List<PbSubmission> submissions = 
+      List<PbSubmission> submissions =
           db.getPbSubmissions(PbSubmission.query(getPseudonym(), p.id));
       p.score = -1.0;
       p.attempts = 0;
@@ -101,7 +102,7 @@ public class HomeworkEvalSrvImpl
     return db.getLanguages();
   }
 
-  public boolean login(String pseudonym, String passwd) 
+  public boolean login(String pseudonym, String passwd)
   throws ServerException {
     try {
       if (db == null) throw new ServerException("No database.");
@@ -145,7 +146,7 @@ public class HomeworkEvalSrvImpl
         solwriter.write(solution);
         solwriter.close();
       } catch (IOException e) {}
-      log.info("judge:" 
+      log.info("judge:"
         + " pseudonym=" + pseudonym
         + " problem=" + problem
         + " lang=" + langId
@@ -189,7 +190,7 @@ public class HomeworkEvalSrvImpl
         + " pseudonym=" + pseudonym
         + " quiz=" + quiz
         + " solution=" + solution);
-      List<QuizSubmission> previousSubmissions = 
+      List<QuizSubmission> previousSubmissions =
         db.getQuizSubmissions(QuizSubmission.query(getPseudonym(), quiz));
       if (!previousSubmissions.isEmpty())
         throw new ServerException("You can submit quizzes only once.");
@@ -217,7 +218,7 @@ public class HomeworkEvalSrvImpl
   // TODO This code is HORRIBLE!
   public User[] getScores() throws ServerException {
     try {
-      List<PbSubmission> problemSubmissions = 
+      List<PbSubmission> problemSubmissions =
           db.getPbSubmissions(PbSubmission.query(null, null));
       HashMap<PairPseudonymTask, ProblemAttemptData> acc =
           new HashMap<PairPseudonymTask, ProblemAttemptData>();
@@ -238,7 +239,7 @@ public class HomeworkEvalSrvImpl
         ++data.count;
       }
       HashMap<String, User> byPseudonym = new HashMap<String, User>();
-      HashMap<String, PbProperties> pbProperties = 
+      HashMap<String, PbProperties> pbProperties =
           new HashMap<String, PbProperties>();
       for (Map.Entry<PairPseudonymTask, ProblemAttemptData> e : acc.entrySet()) {
         String pb = e.getKey().task();
@@ -254,11 +255,11 @@ public class HomeworkEvalSrvImpl
         }
         if (e.getValue().points > 0.0) {
           u.score += e.getValue().points;
-          u.penalty += 
+          u.penalty +=
               (e.getValue().time - pbProperties.get(e.getKey().task()).start())
               / 1000.0 / 60.0;
           u.penalty +=
-            e.getValue().attempts 
+            e.getValue().attempts
             * pbProperties.get(e.getKey().task()).penalty();
         }
       }

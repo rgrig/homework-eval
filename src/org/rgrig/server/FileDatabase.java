@@ -25,7 +25,7 @@ public class FileDatabase implements Database {
   }
 
   private File file(String ... path) throws FileNotFoundException {
-    File result = location; 
+    File result = location;
     for (int i = 0; i < path.length; ++i)
       result = new File(result, path[i]);
     return result;
@@ -58,7 +58,7 @@ public class FileDatabase implements Database {
   }
 
   // TODO Read the config files only once!
-  public PbProperties getProblemProperties(String problem) 
+  public PbProperties getProblemProperties(String problem)
       throws ServerException
   {
     return PbProperties.empty()
@@ -110,7 +110,7 @@ public class FileDatabase implements Database {
         p.id = id;
         p.name = pp.name();
         p.totalScore = pp.score();
-       
+
         // specific to problems
         p.statement = UtilSrv.readFile(new File(pf, "statement"));
         p.examples = getProblemExamples(p.id);
@@ -164,7 +164,7 @@ public class FileDatabase implements Database {
   public String[] getLanguages() throws ServerException {
     try {
       ArrayList<String> result = new ArrayList<String>();
-      for (File lf : file("languages").listFiles()) 
+      for (File lf : file("languages").listFiles())
         if (!lf.getName().startsWith(".")) result.add(lf.getName());
       return result.toArray(new String[0]);
     } catch (IOException e) {
@@ -189,7 +189,7 @@ public class FileDatabase implements Database {
     }
   }
 
-  public double getTotalScore() 
+  public double getTotalScore()
   throws ServerException {
     try {
       FileInputStream fis = new FileInputStream(file("config"));
@@ -201,7 +201,7 @@ public class FileDatabase implements Database {
     }
   }
 
-  public double getScore(String task) 
+  public double getScore(String task)
   throws ServerException {
     String s = getQuizProperty(task, "score");
     if (s == null) s = getPbProperty(task, "score");
@@ -212,12 +212,12 @@ public class FileDatabase implements Database {
   }
 
   public void recordPbSubmission(PbSubmission submission)
-      throws ServerException 
+      throws ServerException
   {
     PrintWriter pw = null;
     try {
       pw = new PrintWriter(new FileWriter(file("scores", "problems"), true));
-      pw.printf("%s %s %f %x\n", 
+      pw.printf("%s %s %f %x\n",
           submission.pseudonym(),
           submission.problem(),
           submission.points(),
@@ -247,7 +247,7 @@ public class FileDatabase implements Database {
         String problem = scan.next();
         double points = scan.nextDouble();
         long time = scan.nextLong(16);
-        if (query.pseudonym() != null 
+        if (query.pseudonym() != null
             && !query.pseudonym().equals(pseudonym)) continue;
         if (query.problem() != null
             && !query.problem().equals(problem)) continue;
@@ -258,7 +258,7 @@ public class FileDatabase implements Database {
       // That's fine: We just return an empty list.
     } catch (Throwable t) {
       throw UtilSrv.se("Cannot lookup problem submission.", t);
-    } 
+    }
     return result;
   }
 
@@ -282,7 +282,7 @@ public class FileDatabase implements Database {
     } catch (Throwable t) {
       throw UtilSrv.se("Cannot lookup quiz submissions.", t);
     }
-    return null;
+    return new ArrayList<QuizSubmission>();
   }
 
   public boolean checkLogin(String pseudonym, String passwdHash) {
@@ -297,7 +297,7 @@ public class FileDatabase implements Database {
     return false;
   }
 
-  private QuizQuestion[] parseQuizQuestions(File qd) 
+  private QuizQuestion[] parseQuizQuestions(File qd)
   throws ServerException {
     try {
       File q = new File(qd, "questions");
