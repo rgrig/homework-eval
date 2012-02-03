@@ -56,7 +56,7 @@ public class Judge {
     workDir = new File(pathPrefix);
   }
 
-  public void prepare(String pb, Language lang) 
+  public void prepare(String pb, Language lang)
   throws ServerException {
     try {
     srcFileName = lang.saveName.replaceAll("PB", pb);
@@ -84,7 +84,7 @@ public class Judge {
     }
   }
 
-  public int run(PbTest[] tests, int timelimit, int memlimit) 
+  public int run(PbTest[] tests, int timelimit, int memlimit)
   throws ServerException {
     allStdout = new ArrayList<String>();
     allStderr = new ArrayList<String>();
@@ -149,7 +149,7 @@ log.fine("OK");
     ProcessBuilder pb = new ProcessBuilder(cmd);
     pb.directory(workDir);
     Process p = pb.start();
-    OutputStreamWriter writer = 
+    OutputStreamWriter writer =
       new OutputStreamWriter(p.getOutputStream());
     StreamReader rOut = new StreamReader(p.getInputStream());
     StreamReader rErr = new StreamReader(p.getErrorStream());
@@ -164,7 +164,7 @@ log.fine("OK");
     stderr = rErr.result;
     if (rOut.exception != null) throw rOut.exception;
     if (rErr.exception != null) throw rErr.exception;
-    
+
 //log.finer("out: " + stdout);
 //log.finer("err: " + stderr);
 //log.finer("done exec");
@@ -172,7 +172,7 @@ log.fine("OK");
   }
 
   private static final double EPS = 1e-6;
-  private boolean diff(String a, String b) 
+  private boolean diff(String a, String b)
   throws ServerException {
 //log.fine("out1: " + a);
 //log.fine("out2: " + b);
