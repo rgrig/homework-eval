@@ -119,7 +119,6 @@ public class MainPanel extends TabPanel {
     p.add(submitP);
 
     p.add(new HTML(pb.statement));
-    p.add(new HTML("<br/><b>Examples</b>"));
 
     FlexTable examples = new FlexTable();
     HTMLTable.RowFormatter rf = examples.getRowFormatter();
