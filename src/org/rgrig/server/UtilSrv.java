@@ -7,7 +7,7 @@ import org.rgrig.client.ServerException;
 
 public class UtilSrv {
 
-  public static String sha(String s) 
+  public static String sha(String s)
   throws NoSuchAlgorithmException, UnsupportedEncodingException {
     MessageDigest md = MessageDigest.getInstance("sha-1");
     md.update(s.getBytes("UTF-8"));
@@ -36,11 +36,15 @@ public class UtilSrv {
   }
 
   public static ServerException se(String reason, Throwable t) {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
     while (t != null) {
-      reason += ": (" + t.getClass().getName() + ") " + t.getMessage();
+      pw.print("\n*** ");
+      t.printStackTrace(pw);
       t = t.getCause();
     }
-    return new ServerException(reason);
+    pw.flush();
+    return new ServerException(sw.toString());
   }
 }
 

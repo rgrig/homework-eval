@@ -31,8 +31,14 @@ public class FileDatabase implements Database {
     return result;
   }
 
+  private String propertyName(String a, String b, String k) {
+    return String.format("%s/%s:%s", a, b, k);
+  }
+
   /* TODO: Perhaps add some caching here once the debugging is done. */
-  private String getProperty(String a, String b, String k) {
+  private String getProperty(String a, String b, String k)
+      throws ServerException
+  {
     try {
       FileInputStream fis1 = new FileInputStream(file("config"));
       FileInputStream fis2 = new FileInputStream(file(a,b,"config"));
@@ -43,17 +49,27 @@ public class FileDatabase implements Database {
       p.load(fis2);
       fis1.close(); fis2.close();
 
+      String result = p.getProperty(k);
+      if (result == null) {
+        throw new ServerException(
+            "ADMIN: Please add property " + propertyName(a, b, k));
+      }
+
       return p.getProperty(k);
     } catch (IOException e) {
-      return null;
+      throw UtilSrv.se("Can't read property " + propertyName(a, b, k), e);
     }
   }
 
-  private String getPbProperty(String problem, String key) {
+  private String getPbProperty(String problem, String key)
+      throws ServerException
+  {
     return getProperty("problems", problem, key);
   }
 
-  private String getQuizProperty(String quiz, String key) {
+  private String getQuizProperty(String quiz, String key)
+      throws ServerException
+  {
     return getProperty("quizzes", quiz, key);
   }
 
