@@ -79,6 +79,7 @@ public class FileDatabase implements Database {
       .withTimeLimit(Integer.valueOf(getPbProperty(problem, "timelimit")))
       .withDeadline(parseDate(getPbProperty(problem, "deadline")))
       .withStart(parseDate(getPbProperty(problem, "start")))
+      .withScoringMethod(getPbProperty(problem, "scoringmethod"))
       .check();
   }
 

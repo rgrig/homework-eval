@@ -160,7 +160,11 @@ System.err.println(a);
         if (okExamples != examples.length) r.points = 0.0;
         else {
           okTests = judge.run(tests, pp.timeLimit(), pp.memoryLimit());
-          r.points = (double) okTests * pp.points() / tests.length;
+          if (pp.scoringMethod().equals("binary"))
+            r.points = okTests == tests.length? pp.points() : 0.0;
+          else if (pp.scoringMethod().equals("proportional"))
+            r.points = (double) okTests * pp.points() / tests.length;
+          else new ServerException("INTERNAL: Unhandled scoring method " + pp.scoringMethod());
         }
       }
       db.recordPbSubmission(new PbSubmission(pseudonym, problem, r.points, now));
