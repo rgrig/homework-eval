@@ -36,6 +36,10 @@ public class UtilSrv {
   }
 
   public static ServerException se(String reason, Throwable t) {
+    return new ServerException(describe(t));
+  }
+
+  public static String describe(Throwable t) {
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
     while (t != null) {
@@ -44,7 +48,7 @@ public class UtilSrv {
       t = t.getCause();
     }
     pw.flush();
-    return new ServerException(sw.toString());
+    return sw.toString();
   }
 }
 

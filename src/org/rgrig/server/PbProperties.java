@@ -20,6 +20,7 @@ public class PbProperties {
   private long deadline;
   private long start;
   private String scoringMethod;
+  private String validator;
 
   public String name() { return name; }
   public double penalty() { return penalty; }
@@ -29,6 +30,7 @@ public class PbProperties {
   public long deadline() { return deadline; }
   public long start() { return start; }
   public String scoringMethod() { return scoringMethod; }
+  public String validator() { return validator; }
 
   private PbProperties(
       String name,
@@ -38,7 +40,8 @@ public class PbProperties {
       int timeLimit,
       long deadline,
       long start,
-      String scoringMethod
+      String scoringMethod,
+      String validator
   ) {
     this.name = name;
     this.penalty = penalty;
@@ -48,10 +51,11 @@ public class PbProperties {
     this.deadline = deadline;
     this.start = start;
     this.scoringMethod = scoringMethod;
+    this.validator = validator;
   }
 
   public static PbProperties empty() {
-    return new PbProperties(null, -1.0, -1.0, -1, -1, -1l, -1l, "");
+    return new PbProperties(null, -1.0, -1.0, -1, -1, -1l, -1l, null, null);
   }
 
   public PbProperties check() throws ServerException {
@@ -74,12 +78,13 @@ public class PbProperties {
     return this;
   }
 
-  public PbProperties withName(String name) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withPenalty(double penalty) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withPoints(double points) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withMemoryLimit(int memoryLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withTimeLimit(int timeLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withDeadline(long deadline) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withStart(long start) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
-  public PbProperties withScoringMethod(String scoringMethod) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod); }
+  public PbProperties withName(String name) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withPenalty(double penalty) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withPoints(double points) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withMemoryLimit(int memoryLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withTimeLimit(int timeLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withDeadline(long deadline) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withStart(long start) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withScoringMethod(String scoringMethod) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withValidator(String validator) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
 }

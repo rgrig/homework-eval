@@ -146,12 +146,12 @@ System.err.println(a);
         + " solFile=" + solhash);
 
       Language lang = db.getLanguage(langId);
-      judge.prepare(problem, lang);
+      PbProperties pp = db.getProblemProperties(problem);
+      judge.prepare(problem, pp.validator(), lang);
       if (judge.compile(solution)) {
         r.compiled = true;
         PbTest[] examples = db.getProblemExamples(problem);
         PbTest[] tests = db.getProblemTests(problem);
-        PbProperties pp = db.getProblemProperties(problem);
 
         int okExamples=0, okTests=0;
         okExamples = judge.run(examples, pp.timeLimit(), pp.memoryLimit());

@@ -35,7 +35,6 @@ public class FileDatabase implements Database {
     return String.format("%s/%s:%s", a, b, k);
   }
 
-  /* TODO: Perhaps add some caching here once the debugging is done. */
   private String getProperty(String a, String b, String k)
       throws ServerException
   {
@@ -80,6 +79,7 @@ public class FileDatabase implements Database {
       .withDeadline(parseDate(getPbProperty(problem, "deadline")))
       .withStart(parseDate(getPbProperty(problem, "start")))
       .withScoringMethod(getPbProperty(problem, "scoringmethod"))
+      .withValidator(getPbProperty(problem, "validator"))
       .check();
   }
 
