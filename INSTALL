@@ -10,7 +10,8 @@ Step 1.
   sudo cp HomeworkEvalApp.war /var/lib/tomcat7/webapps
 At this point you should be able to see the login screen at
   http://localhost:8080/HomeworkEvalApp/
-You may want to use scripts/deploys.sh to repeloy the war file later.
+You may want to use scripts/deploys.sh to redeploy the war file later.
+Tomcat6 should also be OK, but I'm not testing with it anymore.
 
 Step 2. Append the following to /etc/tomcat7/policy.d/50local.policy
   grant codeBase "file:${catalina.base}/webapps/HomeworkEvalApp/-" {
