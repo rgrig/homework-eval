@@ -5,7 +5,7 @@ import org.rgrig.client.ServerException;
 public class PbProperties {
   private String name;
   private double penalty;
-  private double score; // points allocated to this pb; TODO rename points
+  private double points;
   private int memoryLimit;
   private int timeLimit;
   private long deadline;
@@ -13,7 +13,7 @@ public class PbProperties {
 
   public String name() { return name; }
   public double penalty() { return penalty; }
-  public double score() { return score; }
+  public double points() { return points; }
   public int memoryLimit() { return memoryLimit; }
   public int timeLimit() { return timeLimit; }
   public long deadline() { return deadline; }
@@ -22,7 +22,7 @@ public class PbProperties {
   private PbProperties(
       String name,
       double penalty,
-      double score,
+      double points,
       int memoryLimit,
       int timeLimit,
       long deadline,
@@ -30,7 +30,7 @@ public class PbProperties {
   ) {
     this.name = name;
     this.penalty = penalty;
-    this.score = score;
+    this.points = points;
     this.memoryLimit = memoryLimit;
     this.timeLimit = timeLimit;
     this.deadline = deadline;
@@ -42,13 +42,13 @@ public class PbProperties {
   }
 
   public PbProperties check() throws ServerException {
-    if (name == null) 
+    if (name == null)
       throw new ServerException("wrong PbProperties.name");
-    if (penalty < 0.0) 
+    if (penalty < 0.0)
       throw new ServerException("wrong PbProperties.penalty");
-    if (score <= 0.0) 
-      throw new ServerException("wrong PbProperties.score");
-    if (memoryLimit <= 0) 
+    if (points <= 0.0)
+      throw new ServerException("wrong PbProperties.points");
+    if (memoryLimit <= 0)
       throw new ServerException("wrong PbProperties.memoryLimit");
     if (timeLimit <= 0)
       throw new ServerException("wrong PbProperties.timeLimit");
@@ -59,11 +59,11 @@ public class PbProperties {
     return this;
   }
 
-  public PbProperties withName(String name) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
-  public PbProperties withPenalty(double penalty) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
-  public PbProperties withScore(double score) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
-  public PbProperties withMemoryLimit(int memoryLimit) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
-  public PbProperties withTimeLimit(int timeLimit) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
-  public PbProperties withDeadline(long deadline) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
-  public PbProperties withStart(long start) { return new PbProperties(name, penalty, score, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withName(String name) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withPenalty(double penalty) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withPoints(double points) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withMemoryLimit(int memoryLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withTimeLimit(int timeLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withDeadline(long deadline) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
+  public PbProperties withStart(long start) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start); }
 }

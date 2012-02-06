@@ -15,7 +15,7 @@ public interface Database {
   public String[] getLanguages() throws ServerException;
   public Language getLanguage(String id) throws ServerException;
 
-  public double getTotalScore() throws ServerException;
+  public double getTotalPoints() throws ServerException;
 
   public void recordPbSubmission(PbSubmission submission)
     throws ServerException;

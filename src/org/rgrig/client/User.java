@@ -10,9 +10,9 @@ public class User implements IsSerializable, Comparable {
   public double penalty;
   public int compareTo(Object o) {
     User ou = (User) o;
-    if (Math.abs(score - ou.score) > EPSILON) 
+    if (Math.abs(score - ou.score) > EPSILON)
       return Double.compare(ou.score, score);
-    if (Math.abs(penalty - ou.penalty) > EPSILON) 
+    if (Math.abs(penalty - ou.penalty) > EPSILON)
       return Double.compare(penalty, ou.penalty);
     return pseudonym.compareTo(ou.pseudonym);
   }

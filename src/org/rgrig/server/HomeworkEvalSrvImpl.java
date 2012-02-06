@@ -77,12 +77,12 @@ System.err.println(a);
     for (Problem p : ps) {
       List<PbSubmission> submissions =
           db.getPbSubmissions(PbSubmission.query(getPseudonym(), p.id));
-      p.score = -1.0;
+      p.points = -1.0;
       p.attempts = 0;
       int attempts = 0;
       for (PbSubmission s : submissions) {
-        if (s.points() > p.score) {
-          p.score = s.points();
+        if (s.points() > p.points) {
+          p.points = s.points();
           p.attempts = attempts;
         }
         ++attempts;
@@ -160,7 +160,7 @@ System.err.println(a);
         if (okExamples != examples.length) r.score = 0.0;
         else {
           okTests = judge.run(tests, pp.timeLimit(), pp.memoryLimit());
-          r.score = (double) okTests * pp.score() / tests.length;
+          r.score = (double) okTests * pp.points() / tests.length;
         }
       }
       db.recordPbSubmission(new PbSubmission(pseudonym, problem, r.score, now));
@@ -259,8 +259,8 @@ System.err.println(a);
   public double scoreScale() throws ServerException {
     ArrayList<Problem> ps = keepSeen(db.getProblems());
     double soFar = 0.0;
-    for (Problem p : ps) soFar += p.totalScore;
-    return db.getTotalScore() / soFar;
+    for (Problem p : ps) soFar += p.totalPoints;
+    return db.getTotalPoints() / soFar;
   }
 
   private String getPseudonym() {

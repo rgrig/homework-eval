@@ -74,7 +74,7 @@ public class FileDatabase implements Database {
     return PbProperties.empty()
       .withName(getPbProperty(problem, "name"))
       .withPenalty(Double.valueOf(getPbProperty(problem, "penalty")))
-      .withScore(Double.valueOf(getPbProperty(problem, "score")))
+      .withPoints(Double.valueOf(getPbProperty(problem, "points")))
       .withMemoryLimit(Integer.valueOf(getPbProperty(problem, "memlimit")))
       .withTimeLimit(Integer.valueOf(getPbProperty(problem, "timelimit")))
       .withDeadline(parseDate(getPbProperty(problem, "deadline")))
@@ -97,7 +97,7 @@ public class FileDatabase implements Database {
         p.deadline = pp.deadline();
         p.id = id;
         p.name = pp.name();
-        p.totalScore = pp.score();
+        p.totalPoints = pp.points();
 
         // specific to problems
         p.statement = UtilSrv.readFile(new File(pf, "statement"));
@@ -155,13 +155,13 @@ public class FileDatabase implements Database {
     }
   }
 
-  public double getTotalScore()
+  public double getTotalPoints()
   throws ServerException {
     try {
       FileInputStream fis = new FileInputStream(file("config"));
       Properties p = new Properties();
       p.load(fis); fis.close();
-      return Double.parseDouble(p.getProperty("totalscore"));
+      return Double.parseDouble(p.getProperty("totalpoints"));
     } catch (Exception e) {
       throw UtilSrv.se("Can't read totalscore.", e);
     }

@@ -7,9 +7,9 @@ public class PbSubmission {
   private long time;
 
   public PbSubmission(
-      String pseudonym, 
-      String problem, 
-      double points, 
+      String pseudonym,
+      String problem,
+      double points,
       long time
   ) {
     this.pseudonym = pseudonym;
