@@ -206,11 +206,22 @@ System.err.println(a);
     }
   }
 
+  private List<PbSubmission> keepBeforeFreeze(List<PbSubmission> ss)
+      throws ServerException
+  {
+    long freeze = db.getScoreFreeze();
+    ArrayList<PbSubmission> r = new ArrayList<PbSubmission>();
+    for (PbSubmission s : ss)
+      if (s.time() <= freeze) r.add(s);
+    return r;
+  }
+
   // TODO This code is HORRIBLE!
   public User[] getScores() throws ServerException {
     try {
       List<PbSubmission> problemSubmissions =
           db.getPbSubmissions(PbSubmission.query(null, null));
+      problemSubmissions = keepBeforeFreeze(problemSubmissions);
       HashMap<PairPseudonymTask, ProblemAttemptData> acc =
           new HashMap<PairPseudonymTask, ProblemAttemptData>();
       for (PbSubmission submission : problemSubmissions) {

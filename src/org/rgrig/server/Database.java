@@ -16,12 +16,13 @@ public interface Database {
   public Language getLanguage(String id) throws ServerException;
 
   public double getTotalPoints() throws ServerException;
+  public long getScoreFreeze() throws ServerException;
 
   public void recordPbSubmission(PbSubmission submission)
     throws ServerException;
   public List<PbSubmission> getPbSubmissions(PbSubmission query)
-    throws ServerException; // POST: result is sorted by time
+    throws ServerException;
 
-  public boolean checkLogin(String pseudonym, String passwdHash) 
+  public boolean checkLogin(String pseudonym, String passwdHash)
     throws ServerException;
 }

@@ -156,16 +156,34 @@ public class FileDatabase implements Database {
     }
   }
 
-  public double getTotalPoints()
-  throws ServerException {
+  public String getGlobalProperty(String k) throws ServerException {
     try {
-      FileInputStream fis = new FileInputStream(file("config"));
+      FileInputStream f = new FileInputStream(file("config"));
       Properties p = new Properties();
-      p.load(fis); fis.close();
-      return Double.parseDouble(p.getProperty("totalpoints"));
+      p.load(f); f.close();
+      return p.getProperty(k);
+    } catch (IOException e) {
+      throw UtilSrv.se("Can't read " + k + ".", e);
+    }
+  }
+
+  public double getTotalPoints()
+      throws ServerException
+  {
+    try {
+      // TODO(rgrig): Fall back to the sum of all pb points.
+      return Double.parseDouble(getGlobalProperty("totalpoints"));
     } catch (Exception e) {
       throw UtilSrv.se("Can't read totalpoints.", e);
     }
+  }
+
+  public long getScoreFreeze()
+      throws ServerException
+  {
+    String s = getGlobalProperty("scorefreeze");
+    if (s == null) return Long.MAX_VALUE;
+    else return parseDate(s);
   }
 
   public void recordPbSubmission(PbSubmission submission)
