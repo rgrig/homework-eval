@@ -183,9 +183,9 @@ log.fine("OK");
         if (!sa.hasNextDouble() || !sb.hasNextDouble()) return true;
         double da = sa.nextDouble();
         double db = sb.nextDouble();
-        double dd = Math.abs(da-db);
-        double dba = Math.abs(db);
-        if (!(dd < EPS || dba < EPS || dd/dba < EPS)) {
+        double d_abs = Math.abs(da-db);
+        double d_rel = d_abs / Math.abs(db);
+        if (!(d_abs < EPS || d_rel < EPS)) {
 log.fine("NOK, " + da + " too far from " + db);
           return true;
         }
