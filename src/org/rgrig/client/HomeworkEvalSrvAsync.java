@@ -4,7 +4,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface HomeworkEvalSrvAsync {
   public void getProblems(AsyncCallback callback);
-  public void getQuizzes(AsyncCallback callback);
 
   public void getLanguages(AsyncCallback callback);
 
@@ -13,12 +12,8 @@ public interface HomeworkEvalSrvAsync {
 
   public void judgeProblem(
     String problem,
-    String language, 
-    String solution, 
-    AsyncCallback callback);
-  public void judgeQuiz(
-    String quiz,
-    String solution, 
+    String language,
+    String solution,
     AsyncCallback callback);
 
   public void getScores(AsyncCallback callback);

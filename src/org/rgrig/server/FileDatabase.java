@@ -67,12 +67,6 @@ public class FileDatabase implements Database {
     return getProperty("problems", problem, key);
   }
 
-  private String getQuizProperty(String quiz, String key)
-      throws ServerException
-  {
-    return getProperty("quizzes", quiz, key);
-  }
-
   // TODO Read the config files only once!
   public PbProperties getProblemProperties(String problem)
       throws ServerException
@@ -86,28 +80,6 @@ public class FileDatabase implements Database {
       .withDeadline(parseDate(getPbProperty(problem, "deadline")))
       .withStart(parseDate(getPbProperty(problem, "start")))
       .check();
-  }
-
-  public Quiz[] getQuizzes() throws ServerException {
-    try {
-      ArrayList<Quiz> result = new ArrayList<Quiz>();
-      File[] quizzes = file("quizzes").listFiles();
-      for (File qf : quizzes) {
-        String id = qf.getName();
-        if (!qf.isDirectory() || id.startsWith(".")) continue;
-        Quiz q = new Quiz();
-        q.start = parseDate(getQuizProperty(id, "start"));
-        q.deadline = parseDate(getQuizProperty(id, "deadline"));
-        q.id = id;
-        q.name = getQuizProperty(id, "name");
-        q.totalScore = Double.parseDouble(getQuizProperty(id, "score"));
-        q.questions = parseQuizQuestions(qf);
-        result.add(q);
-      }
-      return result.toArray(new Quiz[0]);
-    } catch (IOException e) {
-      throw UtilSrv.se("Can't parse quizzes.", e);
-    }
   }
 
   // TODO: Get rid of the code duplication
@@ -136,28 +108,6 @@ public class FileDatabase implements Database {
       return result.toArray(new Problem[0]);
     } catch (IOException e) {
       throw UtilSrv.se("Can't parse problems.", e);
-    }
-  }
-
-  public String getQuizAnswer(String quiz) throws ServerException {
-    try {
-      StringBuilder sb = new StringBuilder();
-      File qq = file("quizzes", quiz, "questions");
-      BufferedReader br = new BufferedReader(new FileReader(qq));
-      String line = br.readLine();
-      while (line != null) {
-        while (line != null && !isQuizAnswer(line))
-          line = br.readLine();
-        char c = 'a';
-        do {
-          if (isQuizCorrectAnswer(line)) sb.append(c);
-          line = br.readLine(); ++c;
-        } while (isQuizAnswer(line));
-        line = br.readLine();
-      }
-      return sb.toString();
-    } catch (IOException e) {
-      throw new ServerException("Can't read reference quiz answer for " + quiz);
     }
   }
 
@@ -219,8 +169,7 @@ public class FileDatabase implements Database {
 
   public double getScore(String task)
   throws ServerException {
-    String s = getQuizProperty(task, "score");
-    if (s == null) s = getPbProperty(task, "score");
+    String s = getPbProperty(task, "score");
     try { return Double.parseDouble(s); }
     catch (Exception e) {
       throw new ServerException("Can't read total score for task " + task);
@@ -278,29 +227,6 @@ public class FileDatabase implements Database {
     return result;
   }
 
-  public void recordQuizSubmission(QuizSubmission submission)
-      throws ServerException
-  {
-    try {
-      // TODO
-    } catch (Throwable t) {
-      throw UtilSrv.se("Cannot record quiz submission.", t);
-    }
-  }
-
-  public List<QuizSubmission> getQuizSubmissions(QuizSubmission query)
-      throws ServerException
-  {
-    try {
-      // TODO
-//    } catch (FileNotFoundException e) {
-      // That's fine: We just return an empty list.
-    } catch (Throwable t) {
-      throw UtilSrv.se("Cannot lookup quiz submissions.", t);
-    }
-    return new ArrayList<QuizSubmission>();
-  }
-
   public boolean checkLogin(String pseudonym, String passwdHash) {
     try {
       Scanner s = new Scanner(file("accounts"));
@@ -311,45 +237,6 @@ public class FileDatabase implements Database {
       }
     } catch (IOException e) {}
     return false;
-  }
-
-  private QuizQuestion[] parseQuizQuestions(File qd)
-  throws ServerException {
-    try {
-      File q = new File(qd, "questions");
-      BufferedReader br = new BufferedReader(new FileReader(q));
-      ArrayList<QuizQuestion> result = new ArrayList<QuizQuestion>();
-      ArrayList<String> answers = new ArrayList<String>();
-      String line = br.readLine();
-      while (line != null) {
-        QuizQuestion lq = new QuizQuestion();
-        lq.question = "";
-        while (line != null && !isQuizAnswer(line)) {
-          lq.question += "\n" + line;
-          line = br.readLine();
-        }
-        answers.clear();
-        while (line != null && isQuizAnswer(line)) {
-          answers.add(line.substring(3));
-          line = br.readLine();
-        }
-        lq.answers = answers.toArray(new String[0]);
-        result.add(lq);
-        while (line != null && "".equals(line)) line = br.readLine();
-      }
-      return result.toArray(new QuizQuestion[0]);
-    } catch (IOException e) {
-      throw new ServerException("Cannot read quiz " + qd.getName() + ".");
-    }
-  }
-
-  private boolean isQuizAnswer(String line) {
-    return line != null &&
-      (line.startsWith(" * ") || line.startsWith(" - "));
-  }
-
-  private boolean isQuizCorrectAnswer(String line) {
-    return line != null && line.startsWith(" * ");
   }
 
   private PbTest[] getTestsHelper(File dir) throws IOException {

@@ -52,30 +52,29 @@ System.err.println(a);
   }
 
   /* TODO: the duplicated code in the following two functions is ugly */
-  private ArrayList<Task> keepActive(Task[] ts) {
-    ArrayList<Task> r = new ArrayList<Task>();
+  private ArrayList<Problem> keepActive(Problem[] ps) {
+    ArrayList<Problem> r = new ArrayList<Problem>();
     long now = System.currentTimeMillis();
-    for (Task t : ts) {
-      if (t.start > now || now > t.deadline) continue;
-      r.add(t);
+    for (Problem p : ps) {
+      if (p.start <= now && now <= p.deadline)
+        r.add(p);
     }
     return r;
   }
 
-  private ArrayList<Task> keepSeen(Task[] ts) {
-    ArrayList<Task> r = new ArrayList<Task>();
+  private ArrayList<Problem> keepSeen(Problem[] ps) {
+    ArrayList<Problem> r = new ArrayList<Problem>();
     long now = System.currentTimeMillis();
-    for (Task t : ts) {
-      if (t.start > now) continue;
-      r.add(t);
+    for (Problem p : ps) {
+      if (p.start <= now)
+        r.add(p);
     }
     return r;
   }
 
   public Problem[] getProblems() throws ServerException {
-    ArrayList<Task> pbs = keepActive(db.getProblems());
-    for (Task t : pbs) {
-      Problem p = (Problem) t;
+    ArrayList<Problem> ps = keepActive(db.getProblems());
+    for (Problem p : ps) {
       List<PbSubmission> submissions =
           db.getPbSubmissions(PbSubmission.query(getPseudonym(), p.id));
       p.score = -1.0;
@@ -89,13 +88,7 @@ System.err.println(a);
         ++attempts;
       }
     }
-    return pbs.toArray(new Problem[0]);
-  }
-
-  public Quiz[] getQuizzes() throws ServerException {
-    ArrayList<Task> qs = keepActive(db.getQuizzes());
-    // TODO: fill in scores
-    return qs.toArray(new Quiz[0]);
+    return ps.toArray(new Problem[0]);
   }
 
   public String[] getLanguages() throws ServerException {
@@ -177,42 +170,36 @@ System.err.println(a);
     }
   }
 
-  public double judgeQuiz(
-    String quiz,
-    String solution
-  ) throws ServerException {
-    try {
-      lock();
-      int correct = 0;
-      String pseudonym = getPseudonym();
-      if (pseudonym == null) return -1.0;
-      log.info("judge:"
-        + " pseudonym=" + pseudonym
-        + " quiz=" + quiz
-        + " solution=" + solution);
-      List<QuizSubmission> previousSubmissions =
-        db.getQuizSubmissions(QuizSubmission.query(getPseudonym(), quiz));
-      if (!previousSubmissions.isEmpty())
-        throw new ServerException("You can submit quizzes only once.");
-      String reference = db.getQuizAnswer(quiz);
-      if (reference == null || reference.length() != solution.length())
-        throw new ServerException("Quiz judging failed: " + reference.length() + ":" + solution.length());
-      for (int i = 0; i < reference.length(); ++i)
-        if (reference.charAt(i) == solution.charAt(i)) ++correct;
-      double score = (double) correct * db.getScore(quiz) / reference.length();
-      db.recordQuizSubmission(new QuizSubmission(
-            getPseudonym(), quiz, score));
-      return score;
-    } finally {
-      unlock();
-    }
-  }
-
   private static class ProblemAttemptData {
     public int count;
     public int attempts;
     public double points;
     public long time;
+  }
+
+  private static class PairPseudonymTask {
+    private String pseudonym;
+    private String task;
+
+    public PairPseudonymTask(String pseudonym, String task) {
+      assert pseudonym != null;
+      assert task != null;
+      this.pseudonym = pseudonym;
+      this.task = task;
+    }
+
+    public String pseudonym() { return pseudonym; }
+    public String task() { return task; }
+
+    @Override public int hashCode() {
+      return pseudonym.hashCode() + task.hashCode();
+    }
+
+    @Override public boolean equals(Object o) {
+      if (!(o instanceof PairPseudonymTask)) return false;
+      PairPseudonymTask ot = (PairPseudonymTask) o;
+      return pseudonym.equals(ot.pseudonym) && task.equals(ot.task);
+    }
   }
 
   // TODO This code is HORRIBLE!
@@ -270,10 +257,9 @@ System.err.println(a);
   }
 
   public double scoreScale() throws ServerException {
-    ArrayList<Task> ts = keepSeen(db.getQuizzes());
-    ts.addAll(keepSeen(db.getProblems()));
+    ArrayList<Problem> ps = keepSeen(db.getProblems());
     double soFar = 0.0;
-    for (Task t : ts) soFar += t.totalScore;
+    for (Problem p : ps) soFar += p.totalScore;
     return db.getTotalScore() / soFar;
   }
 

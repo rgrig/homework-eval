@@ -11,39 +11,29 @@ public class MainPanel extends TabPanel {
   public HomeworkEvalApp app;
   public HomeworkEvalSrvAsync srv;
 
-  public Quiz[] quiz;
   public Problem[] problem;
   public String[] languages;
-  
-  public VerticalPanel[] quizPanel;
+
   public VerticalPanel[] pbPanel;
   public Panel scoresPanel;
 
-  public Label[] quizDeadline;
   public Label[] pbDeadline;
   public Label[] pbScore;
 
-  public RadioButton[][][] quizAnswer;
   public TextArea[] pbSolution;
   public ListBox[] pbLang;
 
   public MainPanel(
-    Quiz[] quiz, 
-    Problem[] problem, 
+    Problem[] problem,
     String[] languages,
     HomeworkEvalApp app
   ) {
-    this.quiz = quiz;
     this.problem = problem;
     this.languages = languages;
     this.app = app;
     srv = app.srv;
     setWidth("600px"); // TODO Move in CSS.
     Arrays.sort(languages);
-
-    quizPanel = new VerticalPanel[quiz.length];
-    quizDeadline = new Label[quiz.length];
-    quizAnswer = new RadioButton[quiz.length][][];
 
     pbPanel = new VerticalPanel[problem.length];
     pbDeadline = new Label[problem.length];
@@ -53,42 +43,8 @@ public class MainPanel extends TabPanel {
 
     scoresPanel = new VerticalPanel();
 
-    for (int i = 0; i < quiz.length; ++i) addQuiz(i);
     for (int i = 0; i < problem.length; ++i) addPb(i);
     addScores();
-  }
-
-  private void addQuiz(int idx) {
-//Window.alert("start MainPanel.addQuiz");
-    Quiz q = quiz[idx];
-    Panel p = quizPanel[idx] = new VerticalPanel();
-    if (q.score >= 0.0) {
-      p.add(new Label(Util.pointsStr(0.0, q.totalScore)));
-      Label d = quizDeadline[idx] = new Label();
-      DeadlineTimer dt = new DeadlineTimer(q.deadline, d, p);
-      p.add(d);
-      p.add(new HTML("<hr/>"));
-
-      RadioButton[][] allAnswers = 
-        quizAnswer[idx] = new RadioButton[q.questions.length][];
-      for (int i = 0; i < q.questions.length; ++i) {
-        QuizQuestion qq = q.questions[i];
-        p.add(new HTML(qq.question));
-        RadioButton[] answers = 
-          allAnswers[i] = new RadioButton[qq.answers.length];
-        for (int j = 0; j < qq.answers.length; ++j) {
-          answers[j] = new RadioButton("q_"+q.id+"_"+i, qq.answers[j], true);
-          p.add(answers[j]);
-        }
-        p.add(new HTML("&nbsp;"));
-      }
-
-      p.add(new Button("Submit", 
-        new QuizSubmitter(srv, q, p, allAnswers, app.pseudonym)));
-    } else {
-      p.add(new Label(Util.pointsStr(q.score, q.totalScore)));
-    }
-    add(p, q.name);
   }
 
   // TODO: Eliminate code duplication
@@ -159,7 +115,7 @@ public class MainPanel extends TabPanel {
   private void updateScores(final FlexTable t) {
     final HTMLTable.RowFormatter rf = t.getRowFormatter();
     final HTMLTable.CellFormatter cf = t.getCellFormatter();
-    t.setText(0,0,"Pseudonym"); 
+    t.setText(0,0,"Pseudonym");
     t.setText(0,1,"Score");
     t.setText(0,2,"Penalty");
     t.setText(0,3,"Final (est.)");

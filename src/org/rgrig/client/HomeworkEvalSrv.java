@@ -11,9 +11,8 @@ import com.google.gwt.user.client.rpc.*;
  */
 @RemoteServiceRelativePath("HomeworkEvalSrv")
 public interface HomeworkEvalSrv extends RemoteService {
-  /* Ask for (active) problems and quizzes. */
+  /* Ask for (active) problems. */
   public Problem[] getProblems() throws ServerException;
-  public Quiz[] getQuizzes() throws  ServerException;
 
   /* Returns the list of available languages. */
   public String[] getLanguages() throws ServerException;
@@ -27,10 +26,6 @@ public interface HomeworkEvalSrv extends RemoteService {
     String problem,
     String language,
     String solution) throws ServerException;
-  public double judgeQuiz(
-    String quiz,
-    String solution)
-    throws ServerException;
 
   /* Returns the user scores now. */
   public User[] getScores() throws ServerException;
