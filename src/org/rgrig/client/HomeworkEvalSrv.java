@@ -5,9 +5,9 @@ import com.google.gwt.user.client.rpc.*;
 /**
  * The interface between the client and the server.
  *
- * The client can ask for quizzes/problems, can ask for the available
- * languages, can log in and out, can ask for a quiz/problem to
- * be judged, and can ask for the current scores.
+ * The client can ask for problems, can ask for the available languages, can log
+ * in and out, can ask for a problem to be judged, and can ask for the current
+ * scores (points and penalties).
  */
 @RemoteServiceRelativePath("HomeworkEvalSrv")
 public interface HomeworkEvalSrv extends RemoteService {
@@ -30,8 +30,7 @@ public interface HomeworkEvalSrv extends RemoteService {
   /* Returns the user scores now. */
   public User[] getScores() throws ServerException;
 
-  /* Returns by how much scores should be mutliplied to get an estimate
-   * of the final grade
-   */
-  public double scoreScale() throws ServerException;
+  /* Returns by how much points should be mutliplied to get an estimate
+   * of the final. */
+  public double pointsScale() throws ServerException;
 }

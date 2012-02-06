@@ -53,7 +53,7 @@ public class MainPanel extends TabPanel {
     Problem pb = problem[idx];
     Panel p = pbPanel[idx] = new VerticalPanel();
 
-    final Label scoreL = new Label(Util.pointsStr(pb.score, pb.totalScore));
+    final Label scoreL = new Label(Util.pointsStr(pb.points, pb.totalPoints));
     p.add(scoreL);
     Label d = pbDeadline[idx] = new Label();
     DeadlineTimer dt = new DeadlineTimer(pb.deadline, d, p);
@@ -124,7 +124,7 @@ public class MainPanel extends TabPanel {
     cf.setStyleName(0, 2, "gwt-FlexTable-cell-header");
     cf.setStyleName(0, 3, "gwt-FlexTable-cell-header");
 
-    srv.scoreScale(new Aac() {
+    srv.pointsScale(new Aac() {
       public void onSuccess(Object result) {
         final double scale = ((Double)result).doubleValue();
         srv.getScores(new Aac() {
@@ -133,9 +133,9 @@ public class MainPanel extends TabPanel {
             Arrays.sort(users);
             for (int i = 0; i < users.length; ++i) {
               t.setText(i+1,0,users[i].pseudonym);
-              t.setText(i+1,1,"" + Math.round(users[i].score));
+              t.setText(i+1,1,"" + Math.round(users[i].points));
               t.setText(i+1,2,"" + Math.round(users[i].penalty));
-              t.setText(i+1,3,"" + Math.round(scale*users[i].score));
+              t.setText(i+1,3,"" + Math.round(scale*users[i].points));
               cf.setStyleName(i+1,0,"gwt-FlexTable-cell");
               cf.setStyleName(i+1,1,"gwt-FlexTable-cell");
               cf.setStyleName(i+1,2,"gwt-FlexTable-cell");

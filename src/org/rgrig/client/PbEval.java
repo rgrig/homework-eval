@@ -6,5 +6,5 @@ public class PbEval implements IsSerializable {
   public String[] exampleOut;
   public String[] exampleErr;
   public boolean compiled;
-  public double score;
+  public double points;
 }

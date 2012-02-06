@@ -9,7 +9,7 @@ import java.util.concurrent.locks.*;
 import javax.servlet.http.*;
 
 /**
- * Evaluates quiz and problem solutions.
+ * Evaluates problem solutions.
  *
  * This delegates to {@code Judge} the compile/run/judge cycle.
  * This delegates to {@code Database} all interactions with a
@@ -157,13 +157,13 @@ System.err.println(a);
         okExamples = judge.run(examples, pp.timeLimit(), pp.memoryLimit());
         r.exampleOut = judge.getOut();
         r.exampleErr = judge.getErr();
-        if (okExamples != examples.length) r.score = 0.0;
+        if (okExamples != examples.length) r.points = 0.0;
         else {
           okTests = judge.run(tests, pp.timeLimit(), pp.memoryLimit());
-          r.score = (double) okTests * pp.points() / tests.length;
+          r.points = (double) okTests * pp.points() / tests.length;
         }
       }
-      db.recordPbSubmission(new PbSubmission(pseudonym, problem, r.score, now));
+      db.recordPbSubmission(new PbSubmission(pseudonym, problem, r.points, now));
       return r;
     } finally {
       unlock();
@@ -241,7 +241,7 @@ System.err.println(a);
           byPseudonym.put(u.pseudonym, u);
         }
         if (e.getValue().points > 0.0) {
-          u.score += e.getValue().points;
+          u.points += e.getValue().points;
           u.penalty +=
               (e.getValue().time - pbProperties.get(e.getKey().task()).start())
               / 1000.0 / 60.0;
@@ -256,7 +256,7 @@ System.err.println(a);
     }
   }
 
-  public double scoreScale() throws ServerException {
+  public double pointsScale() throws ServerException {
     ArrayList<Problem> ps = keepSeen(db.getProblems());
     double soFar = 0.0;
     for (Problem p : ps) soFar += p.totalPoints;

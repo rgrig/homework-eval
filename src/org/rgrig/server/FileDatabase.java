@@ -163,7 +163,7 @@ public class FileDatabase implements Database {
       p.load(fis); fis.close();
       return Double.parseDouble(p.getProperty("totalpoints"));
     } catch (Exception e) {
-      throw UtilSrv.se("Can't read totalscore.", e);
+      throw UtilSrv.se("Can't read totalpoints.", e);
     }
   }
 

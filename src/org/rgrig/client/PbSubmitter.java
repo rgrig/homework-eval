@@ -39,8 +39,8 @@ public class PbSubmitter implements ClickHandler {
         if (result == null) return; // TODO: logout
         PbEval eval = (PbEval)result;
         WaitPopup.Hide();
-        problem.score = Math.max(eval.score, problem.score);
-        score.setText(Util.pointsStr(problem.score, problem.totalScore));
+        problem.points = Math.max(eval.points, problem.points);
+        score.setText(Util.pointsStr(problem.points, problem.totalPoints));
         JudgeResultDialog.show(eval);
       }
       public void onFailure(Throwable caught) {

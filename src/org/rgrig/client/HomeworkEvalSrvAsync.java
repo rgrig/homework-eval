@@ -17,6 +17,6 @@ public interface HomeworkEvalSrvAsync {
     AsyncCallback callback);
 
   public void getScores(AsyncCallback callback);
-  public void scoreScale(AsyncCallback callback);
+  public void pointsScale(AsyncCallback callback);
 }
 

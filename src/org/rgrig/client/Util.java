@@ -3,14 +3,15 @@ package org.rgrig.client;
 import java.io.*;
 
 public class Util {
-  public static String pointsStr(double score, double totalScore) {
-    if (score < 0.0)
+  // TODO: Add information about the number of attempts.
+  public static String pointsStr(double points, double totalPoints) {
+    if (points < 0.0)
       return "You did not try to solve this problem yet.";
-    if (Math.abs(score - totalScore) < 1e-9)
+    if (Math.abs(points - totalPoints) < 1e-9)
       return "You solved this problem. Congratulations!"; 
-    String r = "You have " + score + " point";
-    if (score != 1.0) r += "s";
-    r += " out of " + totalScore + ".";
+    String r = "You have " + points + " point";
+    if (points != 1.0) r += "s";
+    r += " out of " + totalPoints + ".";
     return r;
   }
 

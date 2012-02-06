@@ -38,8 +38,8 @@ public class JudgeResultDialog extends DialogBox {
       inst.result.setText("Your program does not compile.");
       inst.hint.setText("Hints: Compile locally, check selected language.");
     } else {
-      inst.result.setText("Your program gets " + eval.score
-          + (eval.score == 1.0? " point." : " points."));
+      inst.result.setText("Your program gets " + eval.points
+          + (eval.points == 1.0? " point." : " points."));
       td = Math.min(eval.exampleOut.length, eval.exampleErr.length);
       if (td > 0) {
         inst.hint.setText("Here is what it does on the provided examples:");
