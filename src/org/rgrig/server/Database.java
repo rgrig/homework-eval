@@ -16,7 +16,6 @@ public interface Database {
   public Language getLanguage(String id) throws ServerException;
 
   public double getTotalScore() throws ServerException;
-  @Deprecated public double getScore(String task) throws ServerException;
 
   public void recordPbSubmission(PbSubmission submission)
     throws ServerException;

@@ -167,15 +167,6 @@ public class FileDatabase implements Database {
     }
   }
 
-  public double getScore(String task)
-  throws ServerException {
-    String s = getPbProperty(task, "score");
-    try { return Double.parseDouble(s); }
-    catch (Exception e) {
-      throw new ServerException("Can't read total score for task " + task);
-    }
-  }
-
   public void recordPbSubmission(PbSubmission submission)
       throws ServerException
   {
