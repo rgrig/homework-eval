@@ -11,7 +11,7 @@ import com.google.gwt.user.client.rpc.*;
  */
 @RemoteServiceRelativePath("HomeworkEvalSrv")
 public interface HomeworkEvalSrv extends RemoteService {
-  /* Ask for (active) problems. */
+  /* Returns the list of (active) problems. */
   public Problem[] getProblems() throws ServerException;
 
   /* Returns the list of available languages. */

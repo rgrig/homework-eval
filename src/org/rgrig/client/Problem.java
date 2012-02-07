@@ -2,6 +2,7 @@ package org.rgrig.client;
 
 import com.google.gwt.user.client.rpc.*;
 
+// TODO(rgrig): Why |Problem| *and* |PbProperties|? Document or fix.
 public class Problem implements IsSerializable {
   public String id; // no spaces
   public String name; // may have spaces

@@ -80,6 +80,7 @@ public class FileDatabase implements Database {
       .withStart(parseDate(getPbProperty(problem, "start")))
       .withScoringMethod(getPbProperty(problem, "scoringmethod"))
       .withValidator(getPbProperty(problem, "validator"))
+      .withDifficulty(Integer.valueOf(getPbProperty(problem, "difficulty")))
       .check();
   }
 

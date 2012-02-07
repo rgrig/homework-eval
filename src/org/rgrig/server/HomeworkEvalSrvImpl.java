@@ -74,6 +74,22 @@ System.err.println(a);
 
   public Problem[] getProblems() throws ServerException {
     ArrayList<Problem> ps = keepActive(db.getProblems());
+    Collections.sort(ps, new Comparator<Problem>() {
+      public int compare(Problem p, Problem q) {
+        try {
+          PbProperties pp = db.getProblemProperties(p.id);
+          PbProperties qp = db.getProblemProperties(q.id);
+          if (pp.difficulty() != qp.difficulty())
+            return Integer.valueOf(pp.difficulty()).compareTo(qp.difficulty());
+          if (pp.deadline() != qp.deadline())
+            return Long.valueOf(pp.deadline()).compareTo(qp.deadline());
+          return p.id.compareTo(q.id);
+        } catch (ServerException e) {
+          log.warning("exc:" + UtilSrv.describe(e));
+          return 0;
+        }
+      }
+    });
     for (Problem p : ps) {
       List<PbSubmission> submissions =
           db.getPbSubmissions(PbSubmission.query(getPseudonym(), p.id));

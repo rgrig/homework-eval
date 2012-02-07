@@ -21,6 +21,7 @@ public class PbProperties {
   private long start;
   private String scoringMethod;
   private String validator;
+  private int difficulty;
 
   public String name() { return name; }
   public double penalty() { return penalty; }
@@ -31,6 +32,7 @@ public class PbProperties {
   public long start() { return start; }
   public String scoringMethod() { return scoringMethod; }
   public String validator() { return validator; }
+  public int difficulty() { return difficulty; }
 
   private PbProperties(
       String name,
@@ -41,7 +43,8 @@ public class PbProperties {
       long deadline,
       long start,
       String scoringMethod,
-      String validator
+      String validator,
+      int difficulty
   ) {
     this.name = name;
     this.penalty = penalty;
@@ -52,10 +55,11 @@ public class PbProperties {
     this.start = start;
     this.scoringMethod = scoringMethod;
     this.validator = validator;
+    this.difficulty = difficulty;
   }
 
   public static PbProperties empty() {
-    return new PbProperties(null, -1.0, -1.0, -1, -1, -1l, -1l, null, null);
+    return new PbProperties(null, -1.0, -1.0, -1, -1, -1l, -1l, null, null, -1);
   }
 
   public PbProperties check() throws ServerException {
@@ -78,13 +82,14 @@ public class PbProperties {
     return this;
   }
 
-  public PbProperties withName(String name) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withPenalty(double penalty) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withPoints(double points) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withMemoryLimit(int memoryLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withTimeLimit(int timeLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withDeadline(long deadline) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withStart(long start) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withScoringMethod(String scoringMethod) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
-  public PbProperties withValidator(String validator) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator); }
+  public PbProperties withName(String name) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withPenalty(double penalty) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withPoints(double points) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withMemoryLimit(int memoryLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withTimeLimit(int timeLimit) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withDeadline(long deadline) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withStart(long start) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withScoringMethod(String scoringMethod) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withValidator(String validator) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
+  public PbProperties withDifficulty(int difficulty) { return new PbProperties(name, penalty, points, memoryLimit, timeLimit, deadline, start, scoringMethod, validator, difficulty); }
 }
