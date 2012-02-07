@@ -82,9 +82,13 @@ log.fine("NOK: different number of tokens.");
 log.fine("Running custom validator.");
         save(out, fo);
         save(reference, fr);
-        int rc = exec(
-            String.format("%s %s %s", command, fo.getPath(), fr.getPath()),
-            "", 2, 128);
+        ArrayList<String> c = new ArrayList<String>();
+        c.add(command);
+        c.add(fo.getPath());
+        c.add(fr.getPath());
+        ProcessBuilder pb = new ProcessBuilder(c);
+        Process p = pb.start();
+        int rc = p.waitFor();
         fo.delete();
         fr.delete();
 log.fine("Custom validator " + command + " says " + rc);
