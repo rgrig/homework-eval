@@ -3,3 +3,4 @@ totalpoints 100
 penalty 15
 scoringmethod proportional
 difficulty 5
+validator default
