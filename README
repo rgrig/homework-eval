@@ -1,1 +1,56 @@
 TODO
+
+
+Problem Configuration
+---------------------
+
+Each problems has a list of properties which are read from the files
+  problems/config
+  problems/PBNAME/config
+The format of these files is whatever java.util.Properties.load says. Roughly,
+it's a list of lines of the form
+  KEY VALUE
+The settings in problems/PBNAME/config override those in problems/config.
+
+The following keys should be defined:
+  KEY             EXAMPLE           DESCRIPTION
+  name            HardOne           the problem name
+  penalty         23                each bad submission adds 23 minutes of penalty
+  points          10                solving this problem is worth 10 points
+  memlimit        100               impose a space limit of 100 megabytes
+  timelimit       10                impose a time limit of 10 seconds
+  deadline        2014-02-05 16:00  hide problem after this time
+  start           2014-02-01 10:00  hide problem before this time
+  scoringmethod   proportional      you earn point x (fraction of solved tests)
+                  binary            either you earn all points or none
+  validator       builtin           compare files word by word, alowing small errors if the words could be parsed as Double
+                  anything-else     run "anything-else output reference-output"; zero exit code means OK
+  difficulty      4                 used to sort problems when displaying them in browser
+
+Language Configuration
+----------------------
+
+The file languages/LANG contains the configuration for language LANG. The
+format of theses files is as above. But, the keys are
+
+  KEY         EXAMPLE         DESCRIPTION
+  save        PB.java         where to save the submitted source code
+  compile     javac PB.java   how to compile the code
+  executable  PB.class        consider compilation successful iff this file exists
+  run         java PB         how to run the executable
+
+In all cases, PB will be substituted with the problem name (see key "name" in
+Problem Configuration).
+
+
+Global Configuration
+--------------------
+
+Some options aren't specific to a problem or a language. These are stored in
+  config
+
+The keys are
+
+  KEY           EXAMPLE           DESCRIPTION
+  totalpoints   100               should be the sum of all problem points (to deprecate, I think)
+  scorefreeze   2014-02-05 15:30  hide scoreboard after this time
